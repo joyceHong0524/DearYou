@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_login"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        >
+
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login using"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="15dp"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.shaishavgandhi.loginbuttons.GoogleButton
+                android:id="@+id/button_google"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                app:roundedCorner="true"
+                app:iconCenterAligned="false"
+                app:iconSize="30dp"
+                android:text="Google"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                />
+
+            <com.shaishavgandhi.loginbuttons.FacebookButton
+                android:id="@+id/button_facebook"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                app:roundedCorner="true"
+                app:iconCenterAligned="false"
+                app:iconSize="30dp"
+                android:text="Facebook"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OR"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginTop="21dp"
+            android:gravity="center_horizontal"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Log In"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_style1"/>
+
+        <TextView
+            android:id="@+id/textView_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="No account yet? Click Here"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginTop="25dp"
+            />
+
+
+    </LinearLayout>
+
+
+
+</ScrollView>
+
+</LinearLayout>
