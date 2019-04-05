@@ -11,13 +11,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -28,6 +35,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText input_name;
     EditText input_email;
     EditText input_password;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("d", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            updateDatabase(email,password);
 //                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -105,5 +115,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
      });
 
+    }
+
+    private void updateDatabase(String userEmail,String password){
+        Map<String,Object> data = new HashMap<>();
+        data.put("userEmail",userEmail);
+        data.put("password",password);
+
+        db.collection("User")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("", "Error adding document", e);
+                    }
+                });
     }
 }

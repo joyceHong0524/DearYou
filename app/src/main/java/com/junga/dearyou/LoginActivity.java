@@ -14,12 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +40,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     EditText input_email;
     EditText input_password;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
+
         progressDialog.show();
 
 
@@ -97,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             user = mAuth.getCurrentUser();
                             progressDialog.dismiss(); // hide a progress dialog.
                             Toast.makeText(LoginActivity.this, "Hello! "+user.getEmail(),Toast.LENGTH_SHORT).show();
-                            ((MyApp) getApplication()).setBothEmailAndPassword(email,password);
+//                            ((MyApp) getApplication()).setBothEmailAndPassword(email,password);
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
@@ -111,6 +122,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
 
     }
+
+
+
 
 
 

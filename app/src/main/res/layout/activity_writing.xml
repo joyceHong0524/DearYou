@@ -4,7 +4,9 @@
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add"
@@ -68,19 +70,22 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:weightSum="5">
+        android:weightSum="5"
+        >
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="cancel"/>
+            android:text="cancel"
+            android:fontFamily="sans-serif-light"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="3"
             android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
 
             android:text="title"/>
         <TextView
@@ -88,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
             android:text="save"/>
     </LinearLayout>
 
@@ -98,11 +104,13 @@
         android:layout_below="@+id/menu_top">
 
         <EditText
+
             android:id="@+id/editText_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
             android:inputType="text"
+            android:fontFamily="sans-serif-medium"
             android:layout_margin="10dp"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -116,7 +124,8 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:scrollbars="vertical"
-        android:background="@null"/>
+        android:background="@null"
+        android:fontFamily="sans-serif-light"/>
 
     </RelativeLayout>
 
