@@ -1,5 +1,6 @@
 package com.junga.dearyou;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +24,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String name;
     private String email;
     private String password;
@@ -71,8 +73,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        //Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -88,10 +88,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void signup(){
-
         name = input_name.getText().toString();
         email = input_email.getText().toString();
         password = input_password.getText().toString();
+
 
 
         mAuth.createUserWithEmailAndPassword(email,password)
@@ -102,13 +102,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("d", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateDatabase(email,password);
-//                            updateUI(user);
+                            String userId = user.getUid();
+                            Log.d("d",userId);
+                            updateDatabase(userId, email);
+                            toMainActivity();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("d", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
 
                     }
                 };
@@ -117,24 +121,30 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void updateDatabase(String userEmail,String password){
-        Map<String,Object> data = new HashMap<>();
-        data.put("userEmail",userEmail);
-        data.put("password",password);
+    public void updateDatabase(String userId, String userEmail){
+        String name = input_name.getText().toString();
+        UserItem data = new UserItem(userId, userEmail,name,null,"De Name",null);
 
         db.collection("User")
                 .add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("", "Error adding document", e);
+                        Log.w("hi", "Error adding document", e);
+
                     }
                 });
+    }
+
+    private void toMainActivity() {
+        Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+        startActivity(intent);
     }
 }

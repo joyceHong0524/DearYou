@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void closeFABMenu(){
         isMenuOpen=false;
+        fab_add.animate().translationY(0);
         fab_surfing.animate().translationY(0);
         fab_friends.animate().translationY(0);
         fab_setting.animate().translationY(0);
