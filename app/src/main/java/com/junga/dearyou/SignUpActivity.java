@@ -101,10 +101,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("d", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String userId = user.getUid();
-                            Log.d("d",userId);
-                            updateDatabase(userId, email);
+                            updateDatabase(email); //Auth와 UserDatabase는 email로 연결.
                             toMainActivity();
 
                         } else {
@@ -121,9 +118,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public void updateDatabase(String userId, String userEmail){
+    public void updateDatabase(String userEmail){
         String name = input_name.getText().toString();
-        UserItem data = new UserItem(userId, userEmail,name,null,"De Name",null);
+        UserItem data = new UserItem("",userEmail,name,null,"De Name",new ArrayList<DiaryItem>());
+        ((MyApp) getApplication()).setUser(data);
 
         db.collection("User")
                 .add(data)
@@ -131,7 +129,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
-
+                        //여기서 userId는 user doc의 자동생성된 값을 말한다.
+                        String userId = documentReference.getId();
+                        updateUserId(userId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -141,6 +141,31 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     }
                 });
+    }
+
+    private void updateUserId(String userId) {
+        db.collection("User").document(userId)
+                .update("userId",userId)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("he","Document updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("her","something went wrong");
+                    }
+                });
+
+        //이렇게 하고 나서 MyApp에 올리기.
+
+       UserItem newUser = ((MyApp) getApplication()).getUser();
+       newUser.setUserId(userId);
+       ((MyApp) getApplication()).setUser(newUser); //이제 전체에서 쓸 수가 있다.
+        Log.d("dfjdfjfj",((MyApp) getApplication()).getUser().getUserId());
+
     }
 
     private void toMainActivity() {

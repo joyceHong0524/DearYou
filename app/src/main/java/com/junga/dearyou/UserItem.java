@@ -3,7 +3,7 @@ package com.junga.dearyou;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserItem {
+public class UserItem  {
 
     public String userId;
     public String email;
@@ -73,4 +73,6 @@ public class UserItem {
 //        this.friends = friends;
         this.diaries = diaries;
     }
+
+    public UserItem() {}
 }

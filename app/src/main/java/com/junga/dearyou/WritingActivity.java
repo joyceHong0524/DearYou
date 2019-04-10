@@ -15,10 +15,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.sql .Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,31 +69,84 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
        String editTitle = title.getText().toString();
        String editDescription = description.getText().toString();
+       String authorId = ((MyApp) getApplication()).getUser().getUserId();
 
+       if(auth.getCurrentUser() != null){
+
+//           Timestamp time = new Timestamp(System.currentTimeMillis());
+//           Date time1 = new Date(time);
+           final DiaryItem data = new DiaryItem(authorId,editTitle,editDescription,false);
+           db.collection("Diary").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+               @Override
+               public void onSuccess(DocumentReference documentReference) {
+                   Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
+                   userDiaryUpdate(data); // pass the new diary.
+                   Toast.makeText(WritingActivity.this, "Saved :D",Toast.LENGTH_SHORT).show();
+
+
+               }
+           }).addOnFailureListener(new OnFailureListener() {
+               @Override
+               public void onFailure(@NonNull Exception e) {
+                   Log.d("error", e.toString());
+               }
+           });
+       }else{
+           return;
+       }
 
 
 //        Map<String,Object> data = new HashMap<>();
 //        data.put("title",editTitle);
 //        data.put("description",editDescription);
-        String email = auth.getCurrentUser().getEmail();
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-        Long a = time.getTime();
 
-        DiaryItem data = new DiaryItem(email,time,editDescription,false);
-        db.collection("Diary").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+
+
+    }
+
+    private void userDiaryUpdate(final DiaryItem diaryItem){
+
+       final String userId = ((MyApp) getApplication()).getUser().userId;
+
+        //1. userid(authorId)를 가지고 데이터 doc에 접근.
+        DocumentReference userRef = db.collection("User").document(userId); //might be null. so need to do something with this.
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
-                Toast.makeText(WritingActivity.this, "Saved :D",Toast.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                 DocumentSnapshot document = task.getResult();
+//                 Log.d("document log",document.toString());
+                 if(document.exists()){
+                     UserItem user = document.toObject(UserItem.class);
+                     ArrayList<DiaryItem> diaryList = user.getDiaries();
+                     diaryList.add(diaryItem);
+                     DocumentReference userRef = db.collection("User").document(userId); //might be null. so need to do something with this.
 
+                     userRef.update("diaries",diaryList)
+                             .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                 @Override
+                                 public void onSuccess(Void aVoid) {
+                                     Log.d("", "DocumentSnapshot successfully updated!");
+                                 }
+                             })
+                             .addOnFailureListener(new OnFailureListener() {
+                                 @Override
+                                 public void onFailure(@NonNull Exception e) {
+                                     Log.w("w","Error updating documents.");
+                                 }
+                             });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("error", e.toString());
+                 }
+                }
             }
         });
 
+
+
+        //2. diary arrayList를 수정.
+        //3. database에 업데이트.
+
     }
+
 }

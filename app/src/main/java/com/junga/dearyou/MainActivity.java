@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -17,6 +20,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fab_surfing;
     FloatingActionButton fab_friends;
     FloatingActionButton fab_setting;
+
+    RecyclerView recyclerView;
+
 
     boolean isMenuOpen = false;
 
@@ -38,6 +44,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_surfing.setOnClickListener(this);
         fab_friends.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
+
+
+        //Set RecyclerView
+//
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+
+        MyDiaryAdapter adapter = new MyDiaryAdapter(getApplicationContext(),MyApp.getApp().getUser().getDiaries());
+        recyclerView.setAdapter(adapter);
+
+        Log.d("My User Id!!!",MyApp.getApp().getUser().getEmail());
+//        Log.d("My User diaries",user.getDiaries().get(0).toString());
+        Log.d("My User Id!!!",MyApp.getApp().getUser().getDiaryName());
+
+
+        Log.d("My User Id!!!",MyApp.getApp().getUser().getNickname());
+
+
+
+
     }
 
     @Override
