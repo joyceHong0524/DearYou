@@ -1,5 +1,6 @@
 package com.junga.dearyou;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
@@ -59,8 +60,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
 
         button_google = (Button) findViewById(R.id.button_google);
         button_facebook = (Button) findViewById(R.id.button_facebook);
@@ -122,11 +121,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d("","signInWithEmail : success!!");
                             user = mAuth.getCurrentUser();
                             progressDialog.dismiss(); // hide a progress dialog.
-                            Toast.makeText(LoginActivity.this, "Hello! "+user.getEmail(),Toast.LENGTH_SHORT).show();
 //                            ((MyApp) getApplication()).setBothEmailAndPassword(email,password);
                             setMyAppUser(user.getEmail());
 
-                            Log.d("flag",String.valueOf(flag));
                         } else{
                             Log.w("","signInWithEmail : failure!", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
@@ -176,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Handler to handle update UserInformation
 
+    @SuppressLint("HandlerLeak")
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -183,6 +181,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(msg.what == 0){
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 Log.d("","Start Main Activity");
+                Toast.makeText(LoginActivity.this, "Hello! "+MyApp.getApp().getUser().getNickname(),Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
             }

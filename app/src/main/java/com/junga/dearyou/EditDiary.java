@@ -1,5 +1,6 @@
 package com.junga.dearyou;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
@@ -22,35 +23,35 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class EditDiary extends AppCompatActivity implements View.OnClickListener{
-    final int NO_POSITION=-1;
-    final int UPDATE = 1;
-    String title;
-    String content;
-    TextView textView_title;
-    TextView textView_content;
-    TextView textView_edit;
-    TextView textView_delete;
-    int position; //diary의 위치를 알려줌.
+public class EditDiary extends AppCompatActivity implements View.OnClickListener {
+    private final int NO_POSITION = -1;
+    private final int UPDATE = 1;
+    private String title;
+    private String content;
+    private TextView textView_title;
+    private TextView textView_content;
+    private TextView textView_edit;
+    private TextView textView_delete;
+    private int position; //diary의 위치를 알려줌.
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //For delete diary
-    String diaryId; //For method delete diary , 2.Diarydata delete
+    private String diaryId; //For method delete diary , 2.Diarydata delete
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_diary);
 
-        textView_title = (TextView) findViewById(R.id.textView_title);
-        textView_content = (TextView) findViewById(R.id.textView_content);
-        textView_edit = (TextView) findViewById(R.id.textView_edit);
-        textView_delete =(TextView) findViewById(R.id.textView_delete);
+        textView_title = findViewById(R.id.textView_title);
+        textView_content = findViewById(R.id.textView_content);
+        textView_edit = findViewById(R.id.textView_edit);
+        textView_delete = findViewById(R.id.textView_delete);
 
         title = getIntent().getStringExtra("title");
         content = getIntent().getStringExtra("content");
-        position = getIntent().getIntExtra("position",NO_POSITION);
+        position = getIntent().getIntExtra("position", NO_POSITION);
         textView_title.setText(title);
         textView_content.setText(content);
 
@@ -59,27 +60,26 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
     }
 
 
-
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.textView_edit){
-            if(position != NO_POSITION){
-                Intent intent = new Intent(EditDiary.this,WritingActivity.class);
-                intent.putExtra("title",title);
-                intent.putExtra("content",content);
-                intent.putExtra("position",position);
-                intent.putExtra("mode",UPDATE); //update mode라는 것!
+        if (v.getId() == R.id.textView_edit) {
+            if (position != NO_POSITION) {
+                Intent intent = new Intent(EditDiary.this, WritingActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("content", content);
+                intent.putExtra("position", position);
+                intent.putExtra("mode", UPDATE); //update mode라는 것!
                 startActivity(intent);
             }
-        } if (v.getId() == R.id.textView_delete){
-            if(position != NO_POSITION){
+        }
+        if (v.getId() == R.id.textView_delete) {
+            if (position != NO_POSITION) {
                 deleteDiary();
             }
         }
     }
 
-    private void deleteDiary(){
-
+    private void deleteDiary() {
 
 
         //1.Userdata delete
@@ -98,7 +98,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
                 //update editted diary arraylist.
                 db.collection("User").document(MyApp.getApp().getUser().getUserId())
-                        .update("diaries",diaries)
+                        .update("diaries", diaries)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -109,7 +109,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("w","Error updating documents.");
+                        Log.w("w", "Error updating documents.");
 
                     }
                 });
@@ -121,11 +121,13 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
     }
 
-    Handler hanlder = new Handler(){
+    @SuppressLint("HandlerLeak")
+    private
+    Handler hanlder = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 1){
+            if (msg.what == 1) {
 
                 //2.Diarydata  delete
                 //diaryId가 필요하다.
@@ -140,7 +142,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("","Failed to delete");
+                        Log.d("", "Failed to delete");
                     }
                 });
 
@@ -158,3 +160,5 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         }
     };
 }
+
+

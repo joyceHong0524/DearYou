@@ -25,26 +25,9 @@ public class MyApp extends Application {
         return app;
     }
 
-    private ArrayList<DiaryItem> diaries;
     private ArrayList<FriendItem> friends;
     private UserItem user;
-    private String hi;
 
-
-    public void setHi(String a){
-        hi = a;
-    }
-    public String getHi(){
-        return hi;
-    }
-
-    public ArrayList<DiaryItem> getDiaries() {
-        return diaries;
-    }
-
-    public void setDiaries(ArrayList<DiaryItem> diaries) {
-        this.diaries = diaries;
-    }
 
     public ArrayList<FriendItem> getFriends() {
         return friends;
