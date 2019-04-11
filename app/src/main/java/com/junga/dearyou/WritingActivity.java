@@ -17,16 +17,24 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firestore.v1.DocumentTransform;
+
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.text.DateFormat.getDateTimeInstance;
 
 public class WritingActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,7 +53,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +108,11 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         if (auth.getCurrentUser() != null) {
-
-//
-            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, false); //Since we don't know the diaryId yet, just leave it blank!
-            db.collection("Diary").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            Long time = System.currentTimeMillis();
+            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, false,time); //Since we don't know the diaryId yet, just leave it blank!
+            db.collection("Diary")
+                    .add(data)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
@@ -126,6 +134,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+
     private void saveDiaryId(String diaryId) {
         db.collection("Diary").document(diaryId).update("diaryId", diaryId)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -136,7 +145,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
             }
         });
     }
@@ -205,9 +213,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         String editDescription = description.getText().toString();
         String authorId = MyApp.getApp().getUser().getUserId();
         ArrayList<DiaryItem> diary = MyApp.getApp().getUser().getDiaries();
-
         if (auth.getCurrentUser() != null) {
-            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, false);
+            Long time = diary.get(position).getTime(); //기존의 시간 그대로이다.
+            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, false,time);
             db.collection("Diary").document(diary.get(position).getDiaryId())
                     .set(data)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -272,6 +280,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+    }
+
+    private String getDiaryDate(long timestamp) {
+        DateFormat dateFormat = getDateTimeInstance();
+        Date netDate = (new Date(timestamp));
+        return dateFormat.format(netDate);
     }
 }
 

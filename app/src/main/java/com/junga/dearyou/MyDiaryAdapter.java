@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHolder> {
 
@@ -39,9 +41,9 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
             final DiaryItem diary = diaryList.get(position);
             holder.title.setText(diary.title);
-            holder.date.setText("3 days before");
             holder.content.setText(diary.content);
 
+            holder.date.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm").format(new Date(diary.time))); //미국식 표
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
