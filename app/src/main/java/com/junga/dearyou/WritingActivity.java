@@ -1,10 +1,13 @@
 package com.junga.dearyou;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +30,18 @@ import java.util.Map;
 
 public class WritingActivity extends AppCompatActivity implements View.OnClickListener{
 
+    int mode; // if mode = 1이면 update, 0이면 initial save.
+
     EditText title;
     EditText description;
     TextView save;
     TextView cancel;
     TextView titleAbove;
+
+    //variable for update
+    int position;
+    String diaryId;
+
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -51,6 +61,18 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         save.setOnClickListener(this);
         cancel.setOnClickListener(this);
 
+        mode = getIntent().getIntExtra("mode",100);
+
+        if (mode==1){
+            String setTitle = getIntent().getStringExtra("title");
+            String setContent = getIntent().getStringExtra("content");
+            title.setText(setTitle);
+            description.setText(setContent);
+
+            position = getIntent().getIntExtra("position",-100);
+            Log.d("position",String.valueOf(position));
+        }
+
 
     }
 
@@ -58,43 +80,66 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
 
         if(v.getId()==R.id.TextView_save){
-            saveDiary();
+            if(mode ==1 ){
+                updateDiary();
+            }else {
+                saveDiary();
+            }
         }else if(v.getId()==R.id.cancel){
 
         }
 
     }
 
-    private void saveDiary(){
+    //save at database.
 
-       String editTitle = title.getText().toString();
-       String editDescription = description.getText().toString();
-       String authorId = ((MyApp) getApplication()).getUser().getUserId();
+    private void saveDiary() {
 
-       if(auth.getCurrentUser() != null){
-
-//           Timestamp time = new Timestamp(System.currentTimeMillis());
-//           Date time1 = new Date(time);
-           final DiaryItem data = new DiaryItem(authorId,editTitle,editDescription,false);
-           db.collection("Diary").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-               @Override
-               public void onSuccess(DocumentReference documentReference) {
-                   Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
-                   userDiaryUpdate(data); // pass the new diary.
-                   Toast.makeText(WritingActivity.this, "Saved :D",Toast.LENGTH_SHORT).show();
+        String editTitle = title.getText().toString();
+        String editDescription = description.getText().toString();
+        String authorId = ((MyApp) getApplication()).getUser().getUserId();
 
 
-               }
-           }).addOnFailureListener(new OnFailureListener() {
+        if (auth.getCurrentUser() != null) {
+
+//
+            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, false); //Since we don't know the diaryId yet, just leave it blank!
+            db.collection("Diary").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
+                     // pass the new diary.
+                    diaryId = documentReference.getId();
+                    saveDiaryId(diaryId);
+                    data.setDiaryId(diaryId);
+                    userDiarySave(data);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("error", e.toString());
+                }
+            });
+        } else {
+            return;
+        }
+    }
+
+       private void saveDiaryId(String diaryId){
+           db.collection("Diary").document(diaryId).update("diaryId",diaryId)
+                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                       @Override
+                       public void onSuccess(Void aVoid) {
+                           Log.d("fd","updated diaryId");
+                       }
+                   }).addOnFailureListener(new OnFailureListener() {
                @Override
                public void onFailure(@NonNull Exception e) {
-                   Log.d("error", e.toString());
+
                }
            });
-       }else{
-           return;
-       }
-
+        }
 
 //        Map<String,Object> data = new HashMap<>();
 //        data.put("title",editTitle);
@@ -102,11 +147,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
-    }
+    private void userDiarySave(final DiaryItem diaryItem){
 
-    private void userDiaryUpdate(final DiaryItem diaryItem){
-
-       final String userId = ((MyApp) getApplication()).getUser().userId;
+       final String userId = MyApp.getApp().getUser().userId;
 
         //1. userid(authorId)를 가지고 데이터 doc에 접근.
         DocumentReference userRef = db.collection("User").document(userId); //might be null. so need to do something with this.
@@ -137,16 +180,99 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                                  }
                              });
 
+                     //NOT HERE, RELOAD AT THE MAIN ACTIVITY
+
+                     //myapp 클래스에 업데이트하기
+                     ArrayList<DiaryItem> diaries = MyApp.getApp().getUser().getDiaries();
+                     diaries.add(diaryItem);
+                     MyApp.getApp().getUser().setDiaries(diaries);
+
+                     Toast.makeText(WritingActivity.this, "Saved :D",Toast.LENGTH_SHORT).show();
+                     finish();
                  }
                 }
             }
         });
 
 
+    }
 
-        //2. diary arrayList를 수정.
-        //3. database에 업데이트.
+    //2. Update diary
+
+
+    private void updateDiary(){
+
+        String editTitle = title.getText().toString();
+        String editDescription = description.getText().toString();
+        String authorId = MyApp.getApp().getUser().getUserId();
+        ArrayList<DiaryItem> diary = MyApp.getApp().getUser().getDiaries();
+
+        if(auth.getCurrentUser() != null){
+            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(),authorId,editTitle,editDescription,false);
+            db.collection("Diary").document(diary.get(position).getDiaryId())
+                    .set(data)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("df","Success to update diary collection");
+                            userDiaryUpdate(data);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("df","fail");
+                }
+            });
+        }else{
+            return;
+        }
 
     }
 
+    private void userDiaryUpdate(final DiaryItem data){
+        final String userId = MyApp.getApp().getUser().userId;
+
+        //1. userid(authorId)를 가지고 데이터 doc에 접근.
+        final DocumentReference userRef = db.collection("User").document(userId); //might be null. so need to do something with this.
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+//                 Log.d("document log",document.toString());
+                    if(document.exists()){
+                        UserItem user = document.toObject(UserItem.class);
+                        ArrayList<DiaryItem> diaryList = user.getDiaries();
+                        diaryList.set(position,data);
+                        userRef.update("diaries",diaryList)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("", "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("w","Error updating documents.");
+                                    }
+                                });
+
+                        //NOT HERE, RELOAD AT THE MAIN ACTIVITY
+
+                        //myapp 클래스에 업데이트하기
+                        ArrayList<DiaryItem> diaries = MyApp.getApp().getUser().getDiaries();
+                        diaries.set(position,data);
+                        MyApp.getApp().getUser().setDiaries(diaries);
+
+                        Toast.makeText(WritingActivity.this, "Saved :D",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+            }
+        });
+
+    }
 }
+

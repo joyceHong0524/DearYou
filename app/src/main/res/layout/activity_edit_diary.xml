@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_add"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_surfing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_surfing"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_friends"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_setting"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon_menu"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/menu_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:weightSum="5"
+        >
+        <TextView
+            android:id="@+id/textView_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="delete"
+            android:fontFamily="sans-serif-medium"/>
+        <TextView
+            android:id="@+id/titleAbove"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+
+            android:text="title"/>
+        <TextView
+            android:id="@+id/textView_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-medium"
+            android:text="edit"/>
+    </LinearLayout>
+
+
+
+        <TextView
+
+            android:id="@+id/textView_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/menu_top"
+            android:fontFamily="sans-serif-medium"
+            android:layout_margin="10dp"/>
+
+    <TextView
+
+        android:id="@+id/textView_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_title"
+        android:fontFamily="sans-serif-medium"
+        android:layout_margin="10dp"/>
+
+
+
+
+
+</RelativeLayout>
+
+

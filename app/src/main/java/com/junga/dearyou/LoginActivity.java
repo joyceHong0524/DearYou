@@ -113,7 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.show();
 
 
-        mAuth.signInWithEmailAndPassword(email,password)
+//        mAuth.signInWithEmailAndPassword(email,password)
+        mAuth.signInWithEmailAndPassword("joyce@hanmail.net","Rr115500..")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

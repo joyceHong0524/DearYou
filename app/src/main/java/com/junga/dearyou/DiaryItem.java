@@ -11,8 +11,10 @@ public class DiaryItem {
     String content;
     boolean isLocked;
     String title;
+    String diaryId;
 
-    public DiaryItem(String authorId, String title, String content, boolean isLocked) {
+    public DiaryItem(String diaryId,String authorId, String title, String content, boolean isLocked) {
+        this.diaryId = diaryId;
         this.authorId = authorId;
         this.title = title;
 //        this.date = date;
@@ -62,5 +64,8 @@ public class DiaryItem {
         isLocked = locked;
     }
 
+    public void setDiaryId(String diaryId){ this.diaryId = diaryId;}
+
+    public String getDiaryId() {return diaryId;}
 
 }

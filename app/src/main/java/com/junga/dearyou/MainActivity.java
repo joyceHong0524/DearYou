@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fab_setting;
 
     RecyclerView recyclerView;
+    MyDiaryAdapter adapter;
 
 
     boolean isMenuOpen = false;
@@ -46,14 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_setting.setOnClickListener(this);
 
 
-        //Set RecyclerView
-//
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-
-        MyDiaryAdapter adapter = new MyDiaryAdapter(getApplicationContext(),MyApp.getApp().getUser().getDiaries());
-        recyclerView.setAdapter(adapter);
+        setRecyclerView();
 
         Log.d("My User Id!!!",MyApp.getApp().getUser().getEmail());
 //        Log.d("My User diaries",user.getDiaries().get(0).toString());
@@ -67,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //When user comes back to main activity, reload recyclerView.
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Writing Activity에서 다시 돌아왔을 때 RecyclerView를 다시 로딩한다.
+       setRecyclerView();
+
+    }
+
+
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.fab_menu){
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(v.getId()==R.id.fab_add){
             Intent intent = new Intent(MainActivity.this, WritingActivity.class);
+            intent.putExtra("mode",0); // value 1 : update , value 0 : initial save.
             startActivity(intent);
         } else if(v.getId()==R.id.fab_surfing){
 
@@ -104,5 +109,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_surfing.animate().translationY(0);
         fab_friends.animate().translationY(0);
         fab_setting.animate().translationY(0);
+    }
+
+
+
+
+    private void setRecyclerView(){
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+
+        adapter = new MyDiaryAdapter(this,getApplicationContext(),MyApp.getApp().getUser().getDiaries());
+        recyclerView.setAdapter(adapter);
+
     }
 }
