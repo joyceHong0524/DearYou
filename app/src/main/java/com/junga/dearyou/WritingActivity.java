@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,10 +48,14 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     TextView cancel;
     TextView titleAbove;
 
+    ImageView locker;
+
     //variable for update
     int position;
     String diaryId;
 
+    //set locker status
+    boolean isLocked = true; //default is true.
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -62,22 +68,27 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         title = (EditText) findViewById(R.id.editText_title);
         description = (EditText) findViewById(R.id.editText_description);
         save = (TextView) findViewById(R.id.TextView_save);
-        cancel = (TextView) findViewById(R.id.cancel);
-        titleAbove = (TextView) findViewById(R.id.titleAbove);
+        locker = (ImageView) findViewById(R.id.icon_locker);
 
         save.setOnClickListener(this);
-        cancel.setOnClickListener(this);
+        locker.setOnClickListener(this);
 
         mode = getIntent().getIntExtra("mode", 100);
-
-        if (mode == 1) {
+        if (mode == 1) {//edit mode
             String setTitle = getIntent().getStringExtra("title");
             String setContent = getIntent().getStringExtra("content");
             title.setText(setTitle);
             description.setText(setContent);
-
             position = getIntent().getIntExtra("position", -100);
             Log.d("position", String.valueOf(position));
+            if(isLocked){
+                Glide.with(this).load(R.drawable.icon_lock).into(locker);
+            } else{
+                Glide.with(this).load(R.drawable.icon_open).into(locker);
+            }
+
+        } else { //initial save mode
+            Glide.with(this).load(R.drawable.icon_lock).into(locker);
         }
 
 
@@ -92,10 +103,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             } else {
                 saveDiary();
             }
-        } else if (v.getId() == R.id.cancel) {
-
+        }else if(v.getId() == R.id.icon_locker) {
+            lockerChanged(); //Handler로 관리한다.
         }
-
     }
 
     //save at database.
@@ -108,8 +118,10 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
 
         if (auth.getCurrentUser() != null) {
+            //set time
             Long time = System.currentTimeMillis();
-            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, false,time); //Since we don't know the diaryId yet, just leave it blank!
+
+            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, isLocked,time); //Since we don't know the diaryId yet, just leave it blank!
             db.collection("Diary")
                     .add(data)
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -215,7 +227,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         ArrayList<DiaryItem> diary = MyApp.getApp().getUser().getDiaries();
         if (auth.getCurrentUser() != null) {
             Long time = diary.get(position).getTime(); //기존의 시간 그대로이다.
-            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, false,time);
+            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, isLocked,time);
             db.collection("Diary").document(diary.get(position).getDiaryId())
                     .set(data)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -287,5 +299,21 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         Date netDate = (new Date(timestamp));
         return dateFormat.format(netDate);
     }
+
+    private void lockerChanged(){
+        if(isLocked){ //When it was locked, unlock it.
+            isLocked = false;
+            Glide.with(this).load(R.drawable.icon_open).into(locker);
+            Toast.makeText(this,"This diary will be shared",Toast.LENGTH_SHORT).show();
+            Log.d("WritingActivity","diary shared");
+        }else { //When it was unlocked, lock it.
+            isLocked = true;
+            Glide.with(this).load(R.drawable.icon_lock).into(locker);
+            Toast.makeText(this,"We will keep this diary private",Toast.LENGTH_SHORT).show();
+            Log.d("WritingActivity","diary locked");
+        }
+    }
+
+
 }
 

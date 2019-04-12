@@ -2,16 +2,16 @@ package com.junga.dearyou;
 
 public class FriendItem {
     String userId;
-    String friendName;
-    boolean isFriend;
 
-    public FriendItem(){
-
+    public String getUserId() {
+        return userId;
     }
 
-    public FriendItem(String userId, String friendName,boolean isFriend) {
+    public void setUserId(String userId) {
         this.userId = userId;
-        this.friendName = friendName;
-        this.isFriend = isFriend;
+    }
+
+    public FriendItem(String userId) {
+        this.userId = userId;
     }
 }

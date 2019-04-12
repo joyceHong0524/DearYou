@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.junga.dearyou.lib.TimeLib;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,18 +41,19 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-            final DiaryItem diary = diaryList.get(position);
+            //diaryList.size()-1-position을 하는 이유눈 역순으로 표시해주기 위해서.
+            final DiaryItem diary = diaryList.get(diaryList.size()-1-position);
             holder.title.setText(diary.title);
             holder.content.setText(diary.content);
 
-            holder.date.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm").format(new Date(diary.time))); //미국식 표
+            holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
 
                     //pass current diaryItem
-                startEditActivity(position,diary.getTitle(),diary.getContent());
+                startEditActivity(diaryList.size()-1-position,diary.getTitle(),diary.getContent(),diary.isLocked());
                 }
             });
 
@@ -85,12 +88,13 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         adapter.notifyItemInserted(insertIndex);
     }
 
-    public void startEditActivity(int position,String title, String content){
+    public void startEditActivity(int position,String title, String content,boolean islocked){
 
         Intent intent = new Intent(context, EditDiary.class);
         intent.putExtra("position",position);
         intent.putExtra("title",title);
         intent.putExtra("content",content);
+        intent.putExtra("isLocked",islocked);
         mActivity.startActivity(intent);
     }
 

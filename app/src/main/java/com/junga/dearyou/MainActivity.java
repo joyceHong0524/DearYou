@@ -12,6 +12,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
     MyDiaryAdapter adapter;
 
+    TextView diaryName;
+    TextView nickname;
 
     boolean isMenuOpen = false;
 
@@ -33,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //Initialize all views.
+
+        View info = (View) findViewById(R.id.info);
+        info.setOnClickListener(this);
 
         fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
         fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
@@ -46,8 +53,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_friends.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
 
+        diaryName = (TextView) findViewById(R.id.diaryName);
+        nickname = (TextView) findViewById(R.id.nickname);
 
-        setRecyclerView();
+
+        setInfoView();
+       setRecyclerView();
 
         Log.d("My User Id!!!",MyApp.getApp().getUser().getEmail());
 //        Log.d("My User diaries",user.getDiaries().get(0).toString());
@@ -67,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         //Writing Activity에서 다시 돌아왔을 때 RecyclerView를 다시 로딩한다.
        setRecyclerView();
+       setInfoView();
 
     }
 
@@ -89,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
          else if(v.getId()==R.id.fab_setting){
-
+            Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
+            startActivity(intent);
+        }else if(v.getId()==R.id.info){
+             Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
+             startActivity(intent);
         }
 
 
@@ -122,6 +138,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         adapter = new MyDiaryAdapter(this,getApplicationContext(),MyApp.getApp().getUser().getDiaries());
         recyclerView.setAdapter(adapter);
+
+    }
+
+    private void setInfoView(){
+        diaryName.setText(MyApp.getApp().getUser().getDiaryName());
+        String setTextNickname = "By "+MyApp.getApp().getUser().getNickname();
+        nickname.setText(setTextNickname);
 
     }
 }

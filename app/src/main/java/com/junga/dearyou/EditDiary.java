@@ -10,8 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,17 +29,20 @@ import java.util.ArrayList;
 public class EditDiary extends AppCompatActivity implements View.OnClickListener {
     private final int NO_POSITION = -1;
     private final int UPDATE = 1;
+
     private String title;
     private String content;
+    private boolean isLocked;
+    private int position; //diary의 위치를 알려줌.
+
     private TextView textView_title;
     private TextView textView_content;
     private TextView textView_edit;
     private TextView textView_delete;
-    private int position; //diary의 위치를 알려줌.
+    private ImageView imageView_locker;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //For delete diary
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String diaryId; //For method delete diary , 2.Diarydata delete
 
     @Override
@@ -48,15 +54,24 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         textView_content = findViewById(R.id.textView_content);
         textView_edit = findViewById(R.id.textView_edit);
         textView_delete = findViewById(R.id.textView_delete);
+        imageView_locker = findViewById(R.id.icon_locker);
+
 
         title = getIntent().getStringExtra("title");
         content = getIntent().getStringExtra("content");
+        isLocked = getIntent().getBooleanExtra("isLocked",false);
         position = getIntent().getIntExtra("position", NO_POSITION);
         textView_title.setText(title);
         textView_content.setText(content);
 
         textView_edit.setOnClickListener(this);
         textView_delete.setOnClickListener(this);
+
+        if(isLocked){
+            Glide.with(this).load(R.drawable.icon_lock).into(imageView_locker);
+        } else{
+            Glide.with(this).load(R.drawable.icon_open).into(imageView_locker);
+        }
     }
 
 
@@ -68,11 +83,11 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 intent.putExtra("title", title);
                 intent.putExtra("content", content);
                 intent.putExtra("position", position);
+                intent.putExtra("isLocked",isLocked);
                 intent.putExtra("mode", UPDATE); //update mode라는 것!
                 startActivity(intent);
             }
-        }
-        if (v.getId() == R.id.textView_delete) {
+        }else if (v.getId() == R.id.textView_delete) {
             if (position != NO_POSITION) {
                 deleteDiary();
             }
@@ -159,6 +174,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
         }
     };
+
 }
 
 

@@ -63,6 +63,8 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
+
+
     <LinearLayout
         android:id="@+id/menu_top"
         android:layout_width="match_parent"
@@ -81,28 +83,37 @@
             android:text="delete"
             android:fontFamily="sans-serif-medium"/>
         <TextView
-            android:id="@+id/titleAbove"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:fontFamily="sans-serif-light"
+            android:layout_weight="1"
+            />
 
-            android:text="title"/>
+        <ImageView
+            android:id="@+id/icon_locker"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_lock"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
         <TextView
             android:id="@+id/textView_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:fontFamily="sans-serif-medium"
+
             android:text="edit"/>
     </LinearLayout>
 
-
-
-        <TextView
+    <TextView
 
             android:id="@+id/textView_title"
             android:layout_width="match_parent"

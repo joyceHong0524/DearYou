@@ -5,19 +5,36 @@
     android:background="@color/white"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-        android:id="@+id/diary"
+    <RelativeLayout
+        android:id="@+id/info"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center"
-        android:text="Journey of Jeong A"
-        android:textSize="20sp" />
+        android:layout_height="170dp">
+
+        <TextView
+            android:id="@+id/diaryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:layout_centerInParent="true"
+            android:text="Journey of Jeong A"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:text="By Joyce"
+            android:textSize="19sp" />
+    </RelativeLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_below="@+id/diary"
+        android:layout_below="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
        >

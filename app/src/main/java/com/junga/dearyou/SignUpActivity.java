@@ -120,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateDatabase(String userEmail){
         String name = input_name.getText().toString();
-        UserItem data = new UserItem("",userEmail,name,null,"De Name",new ArrayList<DiaryItem>());
+        UserItem data = new UserItem("",userEmail,name,null,"Set your Diary Title",new ArrayList<DiaryItem>());
         ((MyApp) getApplication()).setUser(data);
 
         db.collection("User")
