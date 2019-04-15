@@ -20,22 +20,11 @@ public class MyApp extends Application {
 
     }
 
-
     public static MyApp getApp() {
         return app;
     }
 
-    private ArrayList<FriendItem> friends;
     private UserItem user;
-
-
-    public ArrayList<FriendItem> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(ArrayList<FriendItem> friends) {
-        this.friends = friends;
-    }
 
     public UserItem getUser() {
         if (user == null){

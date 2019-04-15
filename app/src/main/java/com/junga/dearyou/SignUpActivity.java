@@ -120,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateDatabase(String userEmail){
         String name = input_name.getText().toString();
-        UserItem data = new UserItem("",userEmail,name,null,"Set your Diary Title",new ArrayList<DiaryItem>());
+        UserItem data = new UserItem("",userEmail,name,null,"Set your Diary Title",new ArrayList<DiaryItem>(),new ArrayList<FriendItem>());
         ((MyApp) getApplication()).setUser(data);
 
         db.collection("User")
@@ -161,11 +161,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         //이렇게 하고 나서 MyApp에 올리기.
 
-       UserItem newUser = ((MyApp) getApplication()).getUser();
+       UserItem newUser = MyApp.getApp().getUser();
        newUser.setUserId(userId);
-       ((MyApp) getApplication()).setUser(newUser); //이제 전체에서 쓸 수가 있다.
-        Log.d("dfjdfjfj",((MyApp) getApplication()).getUser().getUserId());
-
+       MyApp.getApp().setUser(newUser); //이제 전체에서 쓸 수가 있다.
     }
 
     private void toMainActivity() {

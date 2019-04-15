@@ -57,19 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nickname = (TextView) findViewById(R.id.nickname);
 
 
+        String email = getIntent().getStringExtra("email");
+        Log.d("check frined","this is my friend email "+email);
+
         setInfoView();
        setRecyclerView();
-
-        Log.d("My User Id!!!",MyApp.getApp().getUser().getEmail());
-//        Log.d("My User diaries",user.getDiaries().get(0).toString());
-        Log.d("My User Id!!!",MyApp.getApp().getUser().getDiaryName());
-
-
-        Log.d("My User Id!!!",MyApp.getApp().getUser().getNickname());
-
-
-
-
     }
 
     //When user comes back to main activity, reload recyclerView.
@@ -98,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if(v.getId()==R.id.fab_surfing){
 
         } else if(v.getId()==R.id.fab_friends){
-
+            Intent intent = new Intent(MainActivity.this,FriendActivity.class);
+            startActivity(intent);
         }
          else if(v.getId()==R.id.fab_setting){
             Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
