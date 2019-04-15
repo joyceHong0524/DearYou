@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
     UserItem friendUser;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    MyDiaryAdapter adapter;
 
 
     @Override
@@ -128,6 +130,20 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
     private void setRecyclerView(){
 
         // ** Most improtant thing is only showing unlocked diaries. **
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+
+        ArrayList<DiaryItem> unLockedDiaries = new ArrayList<>();
+
+        for (DiaryItem item : friendUser.getDiaries()){
+            if (!item.isLocked()){
+                unLockedDiaries.add(item);
+            }
+        }
+
+        adapter = new MyDiaryAdapter(this,getApplicationContext(),unLockedDiaries,MyDiaryAdapter.FRIEND_MAIN);
+        recyclerView.setAdapter(adapter);
 
         //1. Get List only unlocked diaries.
 
@@ -247,6 +263,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
             super.handleMessage(msg);
 
             if(msg.what == GOT_FRIEND){
+                Log.d(TAG,"I will set Friend info");
                 setFriendInfo();
             }
         }

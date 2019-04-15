@@ -18,17 +18,23 @@ import java.util.Date;
 
 public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHolder> {
 
+
+    public static final int MY_MAIN = 0;
+    public static final int FRIEND_MAIN = 1;
+
     Context context;
     ArrayList<DiaryItem> diaryList;
     MyDiaryAdapter adapter;
     Activity mActivity;
+    int mode;
 
 
-    public MyDiaryAdapter(Activity mActivity,Context context, ArrayList<DiaryItem> diaryList) {
+    public MyDiaryAdapter(Activity mActivity,Context context, ArrayList<DiaryItem> diaryList,int mode) {
         this.context = context;
         this.diaryList = diaryList;
         adapter = this;
         this.mActivity = mActivity;
+        this.mode = mode;
     }
 
 
@@ -47,6 +53,8 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
             holder.content.setText(diary.content);
 
             holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
+
+            if (mode == MY_MAIN){
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -55,7 +63,9 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
                     //pass current diaryItem
                 startEditActivity(diaryList.size()-1-position,diary.getTitle(),diary.getContent(),diary.isLocked());
                 }
-            });
+            });} else if (mode == FRIEND_MAIN){
+
+            }
 
 
     }

@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new MyDiaryAdapter(this,getApplicationContext(),MyApp.getApp().getUser().getDiaries());
+        adapter = new MyDiaryAdapter(this,getApplicationContext(),MyApp.getApp().getUser().getDiaries(),MyDiaryAdapter.MY_MAIN);
         recyclerView.setAdapter(adapter);
 
     }
