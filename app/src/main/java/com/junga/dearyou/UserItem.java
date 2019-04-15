@@ -10,16 +10,14 @@ public class UserItem  {
     public String nickname;
     public String imageUrl;
     public String diaryName;
-    public ArrayList<FriendItem> friends;
     public ArrayList<DiaryItem> diaries;
+    public ArrayList<String> friends;
 
-
-
-    public ArrayList<FriendItem> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(ArrayList<FriendItem> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 
@@ -73,7 +71,7 @@ public class UserItem  {
 
 
 
-    public UserItem(String userId, String email, String nickname, String imageUrl, String diaryName,ArrayList<DiaryItem> diaries,ArrayList<FriendItem> friends) {
+    public UserItem(String userId, String email, String nickname, String imageUrl, String diaryName,ArrayList<DiaryItem> diaries,ArrayList<String> friends) {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;

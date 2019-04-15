@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -75,9 +76,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("MyApp","in1");
                 if (task.isSuccessful()){
-                    Log.d("MyApp","in2");
                     QuerySnapshot querySnapshot = task.getResult();
                     List<DocumentSnapshot> docs = querySnapshot.getDocuments();
                     if(docs.size()==1) {
@@ -86,8 +85,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
                         friendUser = document.toObject(UserItem.class);
                         setFriendInfo(friendUser.getNickname());
                     }else {
-                        Log.d("MyApp","in4");
-                        Log.d("hi","can't find user. docs size = "+docs.size());
+                        Toast.makeText(FriendActivity.this,"Can't find email Id. Please check it again",Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
