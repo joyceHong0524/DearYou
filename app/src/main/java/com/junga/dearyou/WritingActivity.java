@@ -40,6 +40,8 @@ import static java.text.DateFormat.getDateTimeInstance;
 
 public class WritingActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = getClass().getSimpleName();
+
     int mode; // if mode = 1이면 update, 0이면 initial save.
 
     EditText title;
@@ -80,7 +82,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             title.setText(setTitle);
             description.setText(setContent);
             position = getIntent().getIntExtra("position", -100);
-            Log.d("position", String.valueOf(position));
             if(isLocked){
                 Glide.with(this).load(R.drawable.icon_lock).into(locker);
             } else{
@@ -127,7 +128,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
-                    Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
+                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                     // pass the new diary.
                     diaryId = documentReference.getId();
                     saveDiaryId(diaryId);
@@ -138,7 +139,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("error", e.toString());
+                    Log.d(TAG, "Something went wrong "+e.toString());
                 }
             });
         } else {
@@ -152,7 +153,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("fd", "updated diaryId");
+                        Log.d(TAG, "updated diaryId");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -189,13 +190,13 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d("", "DocumentSnapshot successfully updated!");
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w("w", "Error updating documents.");
+                                        Log.w(TAG, "Error updating documents.");
                                     }
                                 });
 
@@ -233,13 +234,13 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("df", "Success to update diary collection");
+                            Log.d(TAG, "Success to update diary collection");
                             userDiaryUpdate(data);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("df", "fail");
+                    Log.d(TAG, "fail");
                 }
             });
         } else {
@@ -268,13 +269,13 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d("", "DocumentSnapshot successfully updated!");
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w("w", "Error updating documents.");
+                                        Log.w(TAG, "Error updating documents.");
                                     }
                                 });
 
@@ -305,12 +306,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             isLocked = false;
             Glide.with(this).load(R.drawable.icon_open).into(locker);
             Toast.makeText(this,"This diary will be shared",Toast.LENGTH_SHORT).show();
-            Log.d("WritingActivity","diary shared");
+            Log.d(TAG,"diary shared");
         }else { //When it was unlocked, lock it.
             isLocked = true;
             Glide.with(this).load(R.drawable.icon_lock).into(locker);
             Toast.makeText(this,"We will keep this diary private",Toast.LENGTH_SHORT).show();
-            Log.d("WritingActivity","diary locked");
+            Log.d(TAG,"diary locked");
         }
     }
 

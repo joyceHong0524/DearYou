@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentChange;
 import com.junga.dearyou.lib.TimeLib;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHolder> {
 
+    private final String TAG = getClass().getSimpleName();
 
     public static final int MY_MAIN = 0;
     public static final int FRIEND_MAIN = 1;
@@ -58,16 +60,12 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
                     //pass current diaryItem
                 startEditActivity(diaryList.size()-1-position,diary.getTitle(),diary.getContent(),diary.isLocked());
                 }
             });} else if (mode == FRIEND_MAIN){
 
             }
-
-
     }
 
     @Override

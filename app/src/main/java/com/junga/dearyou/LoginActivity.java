@@ -41,6 +41,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = getClass().getSimpleName();
+
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
@@ -118,14 +120,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Log.d("","signInWithEmail : success!!");
+                            Log.d(TAG,"signInWithEmail : success!!");
                             user = mAuth.getCurrentUser();
                             progressDialog.dismiss(); // hide a progress dialog.
 //                            ((MyApp) getApplication()).setBothEmailAndPassword(email,password);
                             setMyAppUser(user.getEmail());
 
                         } else{
-                            Log.w("","signInWithEmail : failure!", task.getException());
+                            Log.w(TAG,"signInWithEmail : failure!", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             //updateUI(user);
@@ -135,8 +137,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
-
     private void setMyAppUser(String email){
         CollectionReference userCollection = db.collection("User");
         Query getUserQuery = userCollection.whereEqualTo("email",email);
@@ -144,20 +144,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("MyApp","in1");
                 if (task.isSuccessful()){
-                    Log.d("MyApp","in2");
                    QuerySnapshot querySnapshot = task.getResult();
                    List<DocumentSnapshot> docs = querySnapshot.getDocuments();
                    if(docs.size()==1) {
-                       Log.d("MyApp","in3");
                        DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
                        userItem = document.toObject(UserItem.class);
                       MyApp.getApp().setUser(userItem);
                       handler.sendEmptyMessage(0);
                    }else {
-                       Log.d("MyApp","in4");
-                       Log.d("hi","can't find user. docs size = "+docs.size());
+                       Log.d(TAG,"can't find user. docs size = "+docs.size());
                        return;
                    }
                 }
@@ -165,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Tag","Something went wrong"+e);
+                Log.d(TAG,"Something went wrong"+e);
             }
         });
 
@@ -180,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             super.handleMessage(msg);
             if(msg.what == 0){
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                Log.d("","Start Main Activity");
+                Log.d(TAG,"Start Main Activity");
                 Toast.makeText(LoginActivity.this, "Hello! "+MyApp.getApp().getUser().getNickname(),Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 

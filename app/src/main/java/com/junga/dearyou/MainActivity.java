@@ -16,6 +16,7 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = getClass().getSimpleName();
 
     FloatingActionButton fab_menu;
     FloatingActionButton fab_add;
@@ -58,10 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         String email = getIntent().getStringExtra("email");
-        Log.d("check frined","this is my friend email "+email);
 
         setInfoView();
-       setRecyclerView();
+        setRecyclerView();
     }
 
     //When user comes back to main activity, reload recyclerView.
@@ -69,51 +69,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume() {
         super.onResume();
         //Writing Activity에서 다시 돌아왔을 때 RecyclerView를 다시 로딩한다.
-       setRecyclerView();
-       setInfoView();
+        setRecyclerView();
+        setInfoView();
 
     }
-
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.fab_menu){
-            if(!isMenuOpen){
+        if (v.getId() == R.id.fab_menu) {
+            if (!isMenuOpen) {
                 showFABMenu();
-            } else{
+            } else {
                 closeFABMenu();
             }
-        } else if(v.getId()==R.id.fab_add){
+        } else if (v.getId() == R.id.fab_add) {
             Intent intent = new Intent(MainActivity.this, WritingActivity.class);
-            intent.putExtra("mode",0); // value 1 : update , value 0 : initial save.
+            intent.putExtra("mode", 0); // value 1 : update , value 0 : initial save.
             startActivity(intent);
-        } else if(v.getId()==R.id.fab_surfing){
+        } else if (v.getId() == R.id.fab_surfing) {
 
-        } else if(v.getId()==R.id.fab_friends){
-            Intent intent = new Intent(MainActivity.this,FriendActivity.class);
+        } else if (v.getId() == R.id.fab_friends) {
+            Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.fab_setting) {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.info) {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
         }
-         else if(v.getId()==R.id.fab_setting){
-            Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
-            startActivity(intent);
-        }else if(v.getId()==R.id.info){
-             Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
-             startActivity(intent);
-        }
-
-
     }
 
-    private void showFABMenu(){
-        isMenuOpen=true;
+    private void showFABMenu() {
+        isMenuOpen = true;
         fab_setting.animate().translationY(-getResources().getDimension(R.dimen.standard_65));
         fab_friends.animate().translationY(-getResources().getDimension(R.dimen.standard_135));
         fab_surfing.animate().translationY(-getResources().getDimension(R.dimen.standard_205));
         fab_add.animate().translationY(-getResources().getDimension(R.dimen.standard_275));
     }
 
-    private void closeFABMenu(){
-        isMenuOpen=false;
+    private void closeFABMenu() {
+        isMenuOpen = false;
         fab_add.animate().translationY(0);
         fab_surfing.animate().translationY(0);
         fab_friends.animate().translationY(0);
@@ -121,22 +117,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
-    private void setRecyclerView(){
+    private void setRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new MyDiaryAdapter(this,getApplicationContext(),MyApp.getApp().getUser().getDiaries(),MyDiaryAdapter.MY_MAIN);
+        adapter = new MyDiaryAdapter(this, getApplicationContext(), MyApp.getApp().getUser().getDiaries(), MyDiaryAdapter.MY_MAIN);
         recyclerView.setAdapter(adapter);
 
     }
 
-    private void setInfoView(){
+    private void setInfoView() {
         diaryName.setText(MyApp.getApp().getUser().getDiaryName());
-        String setTextNickname = "By "+MyApp.getApp().getUser().getNickname();
+        String setTextNickname = "By " + MyApp.getApp().getUser().getNickname();
         nickname.setText(setTextNickname);
 
     }

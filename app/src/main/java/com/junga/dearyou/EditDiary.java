@@ -27,6 +27,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class EditDiary extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = getClass().getSimpleName();
+
+
     private final int NO_POSITION = -1;
     private final int UPDATE = 1;
 
@@ -117,14 +121,14 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d("", "DocumentSnapshot successfully updated!");
+                                Log.d(TAG, "DocumentSnapshot successfully updated!");
                                 hanlder.sendEmptyMessage(1);
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("w", "Error updating documents.");
+                        Log.w(TAG, "Error updating documents.");
 
                     }
                 });
@@ -151,13 +155,13 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("", "Diary successfully deleted!");
+                        Log.d(TAG, "Diary successfully deleted!");
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("", "Failed to delete");
+                        Log.d(TAG, "Failed to delete");
                     }
                 });
 

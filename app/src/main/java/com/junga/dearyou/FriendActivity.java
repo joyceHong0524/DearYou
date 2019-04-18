@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -20,14 +21,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class FriendActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = getClass().getSimpleName();
 
     EditText editText_search;
     TextView textView_search;
 
     TextView friendNickname;
+    TextView friendDiaryname;
     TextView friendVisit;
     View searchResult;
 
@@ -48,6 +54,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
        searchResult = findViewById(R.id.search_result);
 
        friendNickname = (TextView) findViewById(R.id.friendNickname);
+       friendDiaryname = (TextView) findViewById(R.id.friend_diaryName);
        friendVisit = (TextView) findViewById(R.id.visit);
 
        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -55,7 +62,13 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
        textView_search.setOnClickListener(this);
        friendVisit.setOnClickListener(this);
 
+       setRecyclerView();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setRecyclerView();
     }
 
     @Override
@@ -80,10 +93,10 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
                     QuerySnapshot querySnapshot = task.getResult();
                     List<DocumentSnapshot> docs = querySnapshot.getDocuments();
                     if(docs.size()==1) {
-                        Log.d("dd","Friend Email founded");
+                        Log.d(TAG,"Friend Email founded");
                         DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
                         friendUser = document.toObject(UserItem.class);
-                        setFriendInfo(friendUser.getNickname());
+                        setFriendInfo(friendUser.getNickname(),friendUser.getDiaryName());
                     }else {
                         Toast.makeText(FriendActivity.this,"Can't find email Id. Please check it again",Toast.LENGTH_SHORT).show();
                         return;
@@ -93,7 +106,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Tag","Something went wrong"+e);
+                Log.d(TAG,"Something went wrong"+e);
             }
         });
 
@@ -104,10 +117,21 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(FriendActivity.this,FriendMainActivity.class);
         intent.putExtra("email",friendUser.getEmail());
         startActivity(intent);
+        searchResult.setVisibility(View.GONE);
     }
 
-    private void setFriendInfo(String friendName){
-        searchResult.setVisibility(View.VISIBLE);
+    private void setFriendInfo(String friendName, String diaryname){
         friendNickname.setText(friendName);
+        friendDiaryname.setText(diaryname);
+        searchResult.setVisibility(View.VISIBLE);
+
+    }
+
+    private void setRecyclerView(){
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+
+        MyFriendAdapter adapter = new MyFriendAdapter(getApplicationContext(),this,MyApp.getApp().getUser().getFriends());
+        recyclerView.setAdapter(adapter);
     }
 }

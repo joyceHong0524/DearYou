@@ -42,9 +42,9 @@ public class TimeLib {
 
 
         if(hour > 24){
-            ret = new SimpleDateFormat("MM:dd").format(new Date(timestamp));
+            ret = new SimpleDateFormat("MM/dd").format(new Date(timestamp));
             if (hour>8760){
-                ret = new SimpleDateFormat("MM:dd:yyyy").format(new Date(timestamp));
+                ret = new SimpleDateFormat("MM/dd/yyyy").format(new Date(timestamp));
             }
         }
         else if(hour > 0){
@@ -57,7 +57,7 @@ public class TimeLib {
             ret = "just now!";
         }
         else{
-            ret = new SimpleDateFormat("MM:dd").format(new Date(timestamp));
+            ret = new SimpleDateFormat("MM/dd").format(new Date(timestamp));
         }
 
 //        new SimpleDateFormat("MM/dd/yyyy").format(new Date(timestamp));

@@ -28,7 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendMainActivity extends AppCompatActivity implements View.OnClickListener{
+public class FriendMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -70,51 +70,45 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
         String friendEmail = getIntent().getStringExtra("email");
 
         CollectionReference collection = db.collection("User");
-        Query getFriendQuery = collection.whereEqualTo("email",friendEmail);
+        Query getFriendQuery = collection.whereEqualTo("email", friendEmail);
 
         getFriendQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentSnapshot> docs =  querySnapshot.getDocuments();
+                List<DocumentSnapshot> docs = querySnapshot.getDocuments();
 
-                if(docs.size() ==1 ){
-                    Log.d(TAG,"Found your friend");
+                if (docs.size() == 1) {
+                    Log.d(TAG, "Found your friend");
                     DocumentSnapshot doc = docs.get(0);
                     friendUser = doc.toObject(UserItem.class);
-                    Log.d(TAG,"check frined name "+friendUser.getNickname());
-                    Log.d(TAG,"check frined email "+friendUser.getEmail());
-
                     handler.sendEmptyMessage(GOT_FRIEND);
-
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"Something went wrong getting friend's information");
+                Log.d(TAG, "Something went wrong getting friend's information");
                 //if you can't get a friend user's informatino just finish the activity.
                 finish();
             }
         });
 
 
-
-
     }
 
 
-    private void setFriendInfo(){
+    private void setFriendInfo() {
 
         //1. Check if it is my friend or not; -> set image view
 
         ArrayList<String> myFriends = MyApp.getApp().getUser().getFriends();
         isFriend = myFriends.contains(friendUser.getEmail());
 
-        Log.d(TAG,"Is this my friend? "+ isFriend);
-        if (isFriend){
+        Log.d(TAG, "Is this my friend? " + isFriend);
+        if (isFriend) {
             Glide.with(this).load(R.drawable.checked_user).into(friend_status);
-        }else{
+        } else {
             Glide.with(this).load(R.drawable.add_user).into(friend_status);
         }
 
@@ -127,7 +121,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void setRecyclerView(){
+    private void setRecyclerView() {
 
         // ** Most improtant thing is only showing unlocked diaries. **
 
@@ -136,44 +130,38 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
         ArrayList<DiaryItem> unLockedDiaries = new ArrayList<>();
 
-        for (DiaryItem item : friendUser.getDiaries()){
-            if (!item.isLocked()){
+        for (DiaryItem item : friendUser.getDiaries()) {
+            if (!item.isLocked()) {
                 unLockedDiaries.add(item);
             }
         }
 
-        adapter = new MyDiaryAdapter(this,getApplicationContext(),unLockedDiaries,MyDiaryAdapter.FRIEND_MAIN);
+        adapter = new MyDiaryAdapter(this, getApplicationContext(), unLockedDiaries, MyDiaryAdapter.FRIEND_MAIN);
         recyclerView.setAdapter(adapter);
-
-        //1. Get List only unlocked diaries.
-
-        //2. set layout and set adapter to recyclerView
-
-
 
     }
 
-    private void toggleFriendStatus(){
+    private void toggleFriendStatus() {
         //If they were friends -> unfollow,
         //If they were not friends -> follow each other.
 
-        if(!isFriend){ //if they are not friend
+        if (!isFriend) { //if they are not friend
             //update mine
             ArrayList<String> newFriends = MyApp.getApp().getUser().getFriends();
             newFriends.add(friendUser.getEmail());
 
             DocumentReference myRef = db.collection("User").document(MyApp.getApp().getUser().getUserId());
 
-            myRef.update("friends",newFriends)
+            myRef.update("friends", newFriends)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d(TAG,"successfully updated");
+                            Log.d(TAG, "successfully updated");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG,"ooopsie something went wrong.");
+                    Log.d(TAG, "ooopsie something went wrong.");
                 }
             });
 
@@ -183,40 +171,40 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
             DocumentReference friendRef = db.collection("User").document(friendUser.getUserId());
 
-            friendRef.update("friends",friendsOfFriend)
+            friendRef.update("friends", friendsOfFriend)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d(TAG,"successfully update");
+                            Log.d(TAG, "successfully update");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG,"ooooops something went wrong"+e.toString());
+                    Log.d(TAG, "ooooops something went wrong" + e.toString());
                 }
             });
 
             //update info ui
 
-            isFriend= true;
+            isFriend = true;
             Glide.with(this).load(R.drawable.checked_user).into(friend_status);
-        }else{
+        } else {
 
             ArrayList<String> newFriends = MyApp.getApp().getUser().getFriends();
             newFriends.remove(friendUser.getEmail());
 
             DocumentReference myRef = db.collection("User").document(MyApp.getApp().getUser().getUserId());
 
-            myRef.update("friends",newFriends)
+            myRef.update("friends", newFriends)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d(TAG,"successfully updated");
+                            Log.d(TAG, "successfully updated");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG,"ooopsie something went wrong.");
+                    Log.d(TAG, "ooopsie something went wrong.");
                 }
             });
 
@@ -226,44 +214,39 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
             DocumentReference friendRef = db.collection("User").document(friendUser.getUserId());
 
-            friendRef.update("friends",friendsOfFriend)
+            friendRef.update("friends", friendsOfFriend)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d(TAG,"successfully update");
+                            Log.d(TAG, "successfully update");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG,"ooooops something went wrong"+e.toString());
+                    Log.d(TAG, "ooooops something went wrong" + e.toString());
                 }
             });
 
-
-
-            isFriend=false;
+            isFriend = false;
             Glide.with(this).load(R.drawable.add_user).into(friend_status);
         }
-
-        //1. update two userdata base.
-        //2. when 1 is done change MyApp info.
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.friend_status){
+        if (v.getId() == R.id.friend_status) {
             toggleFriendStatus();
         }
     }
 
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            if(msg.what == GOT_FRIEND){
-                Log.d(TAG,"I will set Friend info");
+            if (msg.what == GOT_FRIEND) {
+                Log.d(TAG, "I will set Friend info");
                 setFriendInfo();
             }
         }

@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class DiaryItem {
 
+    private final String TAG = getClass().getSimpleName();
+
     String authorId;
 //    Date date;
     String content;

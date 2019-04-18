@@ -23,6 +23,8 @@ import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private final String TAG = getClass().getSimpleName();
+
     EditText editText_nickname;
     EditText editText_diaryName;
 
@@ -71,13 +73,13 @@ public class ProfileActivity extends AppCompatActivity {
             document.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.d("taks","successfuly updated");
+                    Log.d(TAG,"successfuly updated");
                     myAppUserUpdate(diaryName,nickname);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("taks","There was a problem processing update.");
+                    Log.d(TAG,"There was a problem processing update.");
                 }
             });
 

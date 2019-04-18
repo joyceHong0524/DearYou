@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = getClass().getSimpleName();
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String name;
     private String email;
@@ -51,8 +54,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         TextView textView_login;
 
 
-
-
         button_google = (Button) findViewById(R.id.button_google);
         button_facebook = (Button) findViewById(R.id.button_facebook);
         button_signup = (Button) findViewById(R.id.button_signup);
@@ -67,60 +68,50 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         input_name = (EditText) findViewById(R.id.input_name);
         input_email = (EditText) findViewById(R.id.input_email);
         input_password = (EditText) findViewById(R.id.input_password);
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.button_signup){
+        if (v.getId() == R.id.button_signup) {
             signup();
         }
-
     }
 
-    private void signup(){
+    private void signup() {
         name = input_name.getText().toString();
         email = input_email.getText().toString();
         password = input_password.getText().toString();
 
 
-
-        mAuth.createUserWithEmailAndPassword(email,password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("d", "createUserWithEmail:success");
+                            Log.d(TAG, "createUserWithEmail:success");
                             updateDatabase(email); //Auth와 UserDatabase는 email로 연결.
                             toMainActivity();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("d", "createUserWithEmail:failure", task.getException());
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
 
+                        }
                     }
-                };
 
-     });
+                    ;
+
+                });
 
     }
 
-    public void updateDatabase(String userEmail){
+    public void updateDatabase(String userEmail) {
         String name = input_name.getText().toString();
-        UserItem data = new UserItem("",userEmail,name,null,"Set your Diary Title",new ArrayList<DiaryItem>(),new ArrayList<String>());
+        UserItem data = new UserItem("", userEmail, name, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());
         ((MyApp) getApplication()).setUser(data);
 
         db.collection("User")
@@ -128,7 +119,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("hi", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         //여기서 userId는 user doc의 자동생성된 값을 말한다.
                         String userId = documentReference.getId();
                         updateUserId(userId);
@@ -137,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("hi", "Error adding document", e);
+                        Log.w(TAG, "Error adding document", e);
 
                     }
                 });
@@ -145,29 +136,29 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateUserId(String userId) {
         db.collection("User").document(userId)
-                .update("userId",userId)
+                .update("userId", userId)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("he","Document updated!");
+                        Log.d(TAG, "Document updated!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("her","something went wrong");
+                        Log.d(TAG, "something went wrong");
                     }
                 });
 
         //이렇게 하고 나서 MyApp에 올리기.
 
-       UserItem newUser = MyApp.getApp().getUser();
-       newUser.setUserId(userId);
-       MyApp.getApp().setUser(newUser); //이제 전체에서 쓸 수가 있다.
+        UserItem newUser = MyApp.getApp().getUser();
+        newUser.setUserId(userId);
+        MyApp.getApp().setUser(newUser); //이제 전체에서 쓸 수가 있다.
     }
 
     private void toMainActivity() {
-        Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }
