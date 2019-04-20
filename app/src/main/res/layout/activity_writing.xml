@@ -128,18 +128,33 @@
             android:layout_margin="10dp"/>
 
     </android.support.design.widget.TextInputLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/fab_menu"
+        android:layout_below="@+id/textInputLayout_title">
+        <EditText
+            android:id="@+id/editText_description"
+            android:layout_margin="13dp"
+            android:inputType="textMultiLine"
+            android:hint="Tell me about your story.."
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:scrollbars="vertical"
+            android:background="@null"
+            android:fontFamily="sans-serif-light"/>
+    </ScrollView>
 
-    <EditText
-        android:id="@+id/editText_description"
-        android:layout_margin="13dp"
-        android:layout_below="@+id/textInputLayout_title"
-        android:inputType="textMultiLine"
-        android:hint="Tell me about your story.."
+
+    <TextView
+        android:id="@+id/text_count"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:scrollbars="vertical"
-        android:background="@null"
-        android:fontFamily="sans-serif-light"/>
+        android:fontFamily="sans-serif-light"
+        android:text="11123"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp"/>
 
     </RelativeLayout>
 

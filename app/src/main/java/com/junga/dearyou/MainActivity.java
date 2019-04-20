@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //Initialize all views.
-
         View info = (View) findViewById(R.id.info);
         info.setOnClickListener(this);
 

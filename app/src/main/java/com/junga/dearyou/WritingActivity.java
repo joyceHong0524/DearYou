@@ -5,6 +5,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firestore.v1.DocumentTransform;
+import com.junga.dearyou.lib.TextWatcherLib;
 
 
 import java.sql.Time;
@@ -49,6 +52,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     TextView save;
     TextView cancel;
     TextView titleAbove;
+    TextView textCount;
 
     ImageView locker;
 
@@ -71,9 +75,28 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         description = (EditText) findViewById(R.id.editText_description);
         save = (TextView) findViewById(R.id.TextView_save);
         locker = (ImageView) findViewById(R.id.icon_locker);
+        textCount = (TextView) findViewById(R.id.text_count);
 
         save.setOnClickListener(this);
         locker.setOnClickListener(this);
+
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int letters = description.getText().toString().length();
+                textCount.setText(String.valueOf(letters)+" letters..");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         mode = getIntent().getIntExtra("mode", 100);
         if (mode == 1) {//edit mode
@@ -81,6 +104,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             String setContent = getIntent().getStringExtra("content");
             title.setText(setTitle);
             description.setText(setContent);
+
             position = getIntent().getIntExtra("position", -100);
             if(isLocked){
                 Glide.with(this).load(R.drawable.icon_lock).into(locker);
@@ -117,6 +141,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         String editDescription = description.getText().toString();
         String authorId = ((MyApp) getApplication()).getUser().getUserId();
 
+        editTextCheck();
 
         if (auth.getCurrentUser() != null) {
             //set time
@@ -226,6 +251,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         String editDescription = description.getText().toString();
         String authorId = MyApp.getApp().getUser().getUserId();
         ArrayList<DiaryItem> diary = MyApp.getApp().getUser().getDiaries();
+
+        editTextCheck();
         if (auth.getCurrentUser() != null) {
             Long time = diary.get(position).getTime(); //기존의 시간 그대로이다.
             final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, isLocked,time);
@@ -315,6 +342,15 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void editTextCheck(){
+        if (title.getText().toString().equals("") || description.getText().toString().equals("")){
+            Toast.makeText(this, "You've missed something!",Toast.LENGTH_SHORT).show();
+            return;
+        } else if(description.getText().toString().length() < 140){
+            Toast.makeText(this,"Diary should be longer than 140 letters..",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+    }
 }
 

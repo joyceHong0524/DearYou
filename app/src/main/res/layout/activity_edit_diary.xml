@@ -112,15 +112,19 @@
 
             android:text="edit"/>
     </LinearLayout>
-
     <TextView
-
-            android:id="@+id/textView_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/menu_top"
-            android:fontFamily="sans-serif-medium"
-            android:layout_margin="10dp"/>
+        android:id="@+id/textView_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/menu_top"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        />
 
     <TextView
 
@@ -128,9 +132,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView_title"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="15sp"
         android:layout_margin="10dp"/>
-
 
 
 

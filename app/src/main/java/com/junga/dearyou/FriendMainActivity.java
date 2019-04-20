@@ -137,6 +137,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
         }
 
         adapter = new MyDiaryAdapter(this, getApplicationContext(), unLockedDiaries, MyDiaryAdapter.FRIEND_MAIN);
+        //When you go to FriendViewActivity , use Diary Id.
         recyclerView.setAdapter(adapter);
 
     }
@@ -223,7 +224,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "ooooops something went wrong" + e.toString());
+                    Log.d(TAG, "ooooops! something went wrong" + e.toString());
                 }
             });
 

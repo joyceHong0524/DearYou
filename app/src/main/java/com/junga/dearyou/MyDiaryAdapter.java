@@ -65,6 +65,12 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
                 }
             });} else if (mode == FRIEND_MAIN){
 
+                holder.myView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startFriendViwActivity(diary.getDiaryId());
+                    }
+                });
             }
     }
 
@@ -103,6 +109,12 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         intent.putExtra("title",title);
         intent.putExtra("content",content);
         intent.putExtra("isLocked",islocked);
+        mActivity.startActivity(intent);
+    }
+
+    public void startFriendViwActivity(String diaryId){
+        Intent intent = new Intent(context, FriendViewActivity.class);
+        intent.putExtra("diaryId",diaryId);
         mActivity.startActivity(intent);
     }
 
