@@ -7,8 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +35,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.firestore.model.Document;
+import com.junga.dearyou.lib.CheckLib;
 
 import org.w3c.dom.Text;
 
@@ -54,6 +58,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText input_email;
     EditText input_password;
 
+    TextInputLayout emailWrapper;
+    TextInputLayout passwordWrapper;
+
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean flag;
 
@@ -71,24 +80,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         input_email = (EditText) findViewById(R.id.input_email);
         input_password = (EditText) findViewById(R.id.input_password);
 
+        emailWrapper = (TextInputLayout) findViewById(R.id.email_wrapper);
+        passwordWrapper = (TextInputLayout) findViewById(R.id.password_wrapper);
+
         button_google.setOnClickListener(this);
         button_facebook.setOnClickListener(this);
         button_login.setOnClickListener(this);
         textView_signup.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+        mAuthStateListener = new FirebaseAuth.AuthStateListener(){
 
-        userItem = ((MyApp) getApplication()).getUser(); //새로운 useritem을 가져온다.
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if(user!=null){
+                    //User is signed in
+                    Log.d(TAG,"onAuthStateChanged:signed_in"+user.getUid());
+                } else{
+                    //User is signed out
+                    Log.d(TAG,"onAuthStateChanged:signed_out");
+                }
+            }
+        };
+        userItem = MyApp.getApp().getUser(); //새로운 useritem을 가져온다.
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-////        updateUI(currentUser);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if(mAuthStateListener != null){
+            mAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -108,14 +139,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String email = input_email.getText().toString();
         final String password = input_password.getText().toString();
 
+        if(!checkText(email,password)){
+            return;
+        }
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-
         mAuth.signInWithEmailAndPassword(email,password)
-//        mAuth.signInWithEmailAndPassword("joyce@hanmail.net","Rr115500..")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -123,14 +155,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG,"signInWithEmail : success!!");
                             user = mAuth.getCurrentUser();
                             progressDialog.dismiss(); // hide a progress dialog.
-//                            ((MyApp) getApplication()).setBothEmailAndPassword(email,password);
                             setMyAppUser(user.getEmail());
 
                         } else{
                             Log.w(TAG,"signInWithEmail : failure!", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
-                            //updateUI(user);
                         }
                     }
                 });
@@ -168,7 +198,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //Handler to handle update UserInformation
-
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler(){
         @Override
@@ -185,5 +214,50 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     };
 
 
+//    private class MyTextWatcher implements TextWatcher {
+//        private View view;
+//
+//        private MyTextWatcher(View view) {
+//            this.view = view;
+//        }
+//
+//        @Override
+//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//        }
+//
+//        @Override
+//        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//        }
+//
+//        @Override
+//        public void afterTextChanged(Editable s) {
+//            switch(view.getId()){
+//                case R.id.input_email:
+//                    CheckLib.getInstance().isValidEmail(input_email.getText().toString(),input_email);
+//            }
+//        }
+//    }
 
+
+    private boolean checkText(String email,String password){
+        boolean flag = true;
+        Log.d(TAG,email);
+        Log.d(TAG,password);
+        if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
+            emailWrapper.setError("Invalid email");
+            flag = false;
+        }else if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
+            passwordWrapper.setError("Invalid password");
+            flag = false;
+        }else if (email.equals("")){
+            emailWrapper.setError("Shouldn't be empty");
+            flag = false;
+        }else if (password.equals("")){
+            passwordWrapper.setError("Shouldn't be empty");
+            flag = false;
+        }
+        return flag;
+    }
 }

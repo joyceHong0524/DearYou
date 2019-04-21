@@ -28,7 +28,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firestore.v1.DocumentTransform;
-import com.junga.dearyou.lib.TextWatcherLib;
 
 
 import java.sql.Time;
@@ -50,8 +49,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     EditText title;
     EditText description;
     TextView save;
-    TextView cancel;
-    TextView titleAbove;
     TextView textCount;
 
     ImageView locker;
@@ -89,7 +86,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int letters = description.getText().toString().length();
-                textCount.setText(String.valueOf(letters)+" letters..");
+                String showLetters = String.valueOf(letters) + " letters..";
+                textCount.setText(showLetters);
             }
 
             @Override
@@ -106,9 +104,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             description.setText(setContent);
 
             position = getIntent().getIntExtra("position", -100);
-            if(isLocked){
+            if (isLocked) {
                 Glide.with(this).load(R.drawable.icon_lock).into(locker);
-            } else{
+            } else {
                 Glide.with(this).load(R.drawable.icon_open).into(locker);
             }
 
@@ -128,7 +126,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             } else {
                 saveDiary();
             }
-        }else if(v.getId() == R.id.icon_locker) {
+        } else if (v.getId() == R.id.icon_locker) {
             lockerChanged(); //Handler로 관리한다.
         }
     }
@@ -141,30 +139,33 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         String editDescription = description.getText().toString();
         String authorId = ((MyApp) getApplication()).getUser().getUserId();
 
-        editTextCheck();
+        if (!isTextChecked()) {
+            return;
+        }
+        ;
 
         if (auth.getCurrentUser() != null) {
             //set time
             Long time = System.currentTimeMillis();
 
-            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, isLocked,time); //Since we don't know the diaryId yet, just leave it blank!
+            final DiaryItem data = new DiaryItem("", authorId, editTitle, editDescription, isLocked, time); //Since we don't know the diaryId yet, just leave it blank!
             db.collection("Diary")
                     .add(data)
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    // pass the new diary.
-                    diaryId = documentReference.getId();
-                    saveDiaryId(diaryId);
-                    data.setDiaryId(diaryId);
-                    userDiarySave(data);
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DiaryItem written with ID: " + documentReference.getId());
+                            // pass the new diary.
+                            diaryId = documentReference.getId();
+                            saveDiaryId(diaryId);
+                            data.setDiaryId(diaryId);
+                            userDiarySave(data);
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Something went wrong "+e.toString());
+                    Log.d(TAG, "Something went wrong" + e.toString());
                 }
             });
         } else {
@@ -178,7 +179,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "updated diaryId");
+                        Log.d(TAG, "Successfully Updated diaryId");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -186,11 +187,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
-
-//        Map<String,Object> data = new HashMap<>();
-//        data.put("title",editTitle);
-//        data.put("description",editDescription);
-
 
     private void userDiarySave(final DiaryItem diaryItem) {
 
@@ -204,7 +200,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-//                 Log.d("document log",document.toString());
                     if (document.exists()) {
                         UserItem user = document.toObject(UserItem.class);
                         ArrayList<DiaryItem> diaryList = user.getDiaries();
@@ -225,8 +220,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                                     }
                                 });
 
-                        //NOT HERE, RELOAD AT THE MAIN ACTIVITY
-
                         //myapp 클래스에 업데이트하기
                         ArrayList<DiaryItem> diaries = MyApp.getApp().getUser().getDiaries();
                         diaries.add(diaryItem);
@@ -243,8 +236,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //2. Update diary
-
-
     private void updateDiary() {
 
         String editTitle = title.getText().toString();
@@ -252,10 +243,14 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         String authorId = MyApp.getApp().getUser().getUserId();
         ArrayList<DiaryItem> diary = MyApp.getApp().getUser().getDiaries();
 
-        editTextCheck();
+        if (!isTextChecked()) {
+            return;
+        }
+        ;
+
         if (auth.getCurrentUser() != null) {
             Long time = diary.get(position).getTime(); //기존의 시간 그대로이다.
-            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, isLocked,time);
+            final DiaryItem data = new DiaryItem(diary.get(position).getDiaryId(), authorId, editTitle, editDescription, isLocked, time);
             db.collection("Diary").document(diary.get(position).getDiaryId())
                     .set(data)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -328,29 +323,29 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         return dateFormat.format(netDate);
     }
 
-    private void lockerChanged(){
-        if(isLocked){ //When it was locked, unlock it.
+    private void lockerChanged() {
+        if (isLocked) { //When it was locked, unlock it.
             isLocked = false;
             Glide.with(this).load(R.drawable.icon_open).into(locker);
-            Toast.makeText(this,"This diary will be shared",Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"diary shared");
-        }else { //When it was unlocked, lock it.
+            Toast.makeText(this, "This diary will be shared", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "diary shared");
+        } else { //When it was unlocked, lock it.
             isLocked = true;
             Glide.with(this).load(R.drawable.icon_lock).into(locker);
-            Toast.makeText(this,"We will keep this diary private",Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"diary locked");
+            Toast.makeText(this, "We will keep this diary private", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "diary locked");
         }
     }
 
-    private void editTextCheck(){
-        if (title.getText().toString().equals("") || description.getText().toString().equals("")){
-            Toast.makeText(this, "You've missed something!",Toast.LENGTH_SHORT).show();
-            return;
-        } else if(description.getText().toString().length() < 140){
-            Toast.makeText(this,"Diary should be longer than 140 letters..",Toast.LENGTH_SHORT).show();
-            return;
+    private boolean isTextChecked() {
+        if (title.getText().toString().equals("") || description.getText().toString().equals("")) {
+            Toast.makeText(this, "You've missed something!", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (description.getText().toString().length() < 140) {
+            Toast.makeText(this, "Diary should be longer than 140 letters..", Toast.LENGTH_SHORT).show();
+            return false;
         }
-
+        return true;
     }
 }
 
