@@ -2,8 +2,10 @@ package com.junga.dearyou;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.junga.dearyou.lib.CheckLib;
 
 import org.w3c.dom.Text;
 
@@ -40,6 +43,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText input_name;
     EditText input_email;
     EditText input_password;
+
+    TextInputLayout nameWrapper;
+    TextInputLayout emailWrapper;
+    TextInputLayout passwordWrapper;
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -68,6 +76,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         input_name = (EditText) findViewById(R.id.input_name);
         input_email = (EditText) findViewById(R.id.input_email);
         input_password = (EditText) findViewById(R.id.input_password);
+        nameWrapper = (TextInputLayout) findViewById(R.id.name_wrapper);
+        emailWrapper = (TextInputLayout) findViewById(R.id.email_wrapper);
+        passwordWrapper = (TextInputLayout) findViewById(R.id.password_wrapper);
+
     }
 
     @Override
@@ -82,6 +94,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         email = input_email.getText().toString();
         password = input_password.getText().toString();
 
+        if(!checkText(name,email,password)){
+            return;
+        }
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -160,5 +175,38 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void toMainActivity() {
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private boolean checkText(String name, String email,String password){
+        boolean flag = true;
+
+
+
+        if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
+            emailWrapper.setError("Invalid email");
+            flag = false;
+        }
+
+        if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
+            passwordWrapper.setError("Invalid password");
+            flag = false;
+        }
+
+        if (TextUtils.isEmpty(email)){
+            emailWrapper.setError("Shouldn't be empty");
+            flag = false;
+        }
+
+        if (TextUtils.isEmpty(password)){
+            passwordWrapper.setError("Shouldn't be empty");
+            flag = false;
+        }
+
+        if(TextUtils.isEmpty(name)){
+            nameWrapper.setError("Shouldn't be empty");
+            flag = false;
+        }
+
+        return flag;
     }
 }

@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -243,21 +244,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean checkText(String email,String password){
         boolean flag = true;
-        Log.d(TAG,email);
-        Log.d(TAG,password);
+
         if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
             emailWrapper.setError("Invalid email");
             flag = false;
-        }else if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
+        }
+
+        if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
             passwordWrapper.setError("Invalid password");
             flag = false;
-        }else if (email.equals("")){
+        }
+
+        if (TextUtils.isEmpty(email)){
             emailWrapper.setError("Shouldn't be empty");
             flag = false;
-        }else if (password.equals("")){
+        }
+
+        if (TextUtils.isEmpty(password)){
             passwordWrapper.setError("Shouldn't be empty");
             flag = false;
         }
+
         return flag;
     }
 }
