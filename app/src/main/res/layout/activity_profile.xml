@@ -16,7 +16,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:src="@drawable/icon_add"
-        app:elevation="6dp"
+        app:backgroundTint="@color/fab5"
         app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -26,34 +26,35 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
+        app:backgroundTint="@color/fab4"
         android:src="@drawable/icon_surfing"
-        app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:backgroundTint="@color/fab3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:src="@drawable/icon_friends"
-        app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_setting"
         android:layout_width="wrap_content"
+        app:backgroundTint="@color/fab2"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:src="@drawable/icon_setting"
-        app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_menu"
+        app:backgroundTint="@color/fab1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -150,6 +151,17 @@
             android:layout_margin="10dp"/>
 
     </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textView_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fab_menu"
+        android:layout_centerHorizontal="true"
+        android:text="Sign Out"
+        android:textSize="20dp"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginBottom="20dp"/>
 
 
 

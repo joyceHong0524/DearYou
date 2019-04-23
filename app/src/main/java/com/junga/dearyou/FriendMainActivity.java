@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.junga.dearyou.lib.FabLib;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,9 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                 finish();
             }
         });
+
+        FabLib fab = new FabLib(FriendMainActivity.this);
+        fab.setFabMenu();
 
 
     }

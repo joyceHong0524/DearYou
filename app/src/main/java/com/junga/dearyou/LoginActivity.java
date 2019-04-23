@@ -26,6 +26,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -99,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(user!=null){
                     //User is signed in
                     Log.d(TAG,"onAuthStateChanged:signed_in"+user.getUid());
+                    setMyAppUser(user.getEmail());
                 } else{
                     //User is signed out
                     Log.d(TAG,"onAuthStateChanged:signed_out");
@@ -156,15 +160,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG,"signInWithEmail : success!!");
                             user = mAuth.getCurrentUser();
                             progressDialog.dismiss(); // hide a progress dialog.
+                            input_email.setText("");
+                            input_password.setText("");
                             setMyAppUser(user.getEmail());
 
-                        } else{
-                            Log.w(TAG,"signInWithEmail : failure!", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
                         }
                     }
-                });
+                })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof FirebaseAuthInvalidCredentialsException){
+                    progressDialog.dismiss();
+                    Log.d(TAG,"FirebaseCollision Exception occured : "+e.getLocalizedMessage());
+                    Toast.makeText(LoginActivity.this, "Log-in failed.",Toast.LENGTH_SHORT).show();
+                    passwordWrapper.setError("Password doesn't match with the account.");
+                }
+
+                if (e instanceof FirebaseAuthInvalidUserException){
+                    progressDialog.dismiss();
+                    Log.d(TAG,"FirebaseAuthInvalidUser Exception occured: "+e.getLocalizedMessage());
+                    Toast.makeText(LoginActivity.this,"Log-in failed",Toast.LENGTH_SHORT).show();
+                    emailWrapper.setError("This account doesn't exist.");
+                }
+            }
+        });
 
     }
 
@@ -213,34 +233,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     };
-
-
-//    private class MyTextWatcher implements TextWatcher {
-//        private View view;
-//
-//        private MyTextWatcher(View view) {
-//            this.view = view;
-//        }
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//        }
-//
-//        @Override
-//        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-//            switch(view.getId()){
-//                case R.id.input_email:
-//                    CheckLib.getInstance().isValidEmail(input_email.getText().toString(),input_email);
-//            }
-//        }
-//    }
-
 
     private boolean checkText(String email,String password){
         boolean flag = true;

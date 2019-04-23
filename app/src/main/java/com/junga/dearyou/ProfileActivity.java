@@ -1,5 +1,6 @@
 package com.junga.dearyou;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +13,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.model.Document;
+import com.junga.dearyou.lib.FabLib;
 
 import org.w3c.dom.Text;
 
@@ -29,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     EditText editText_diaryName;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +46,27 @@ public class ProfileActivity extends AppCompatActivity {
         editText_diaryName.setText(MyApp.getApp().getUser().getDiaryName());
         editText_nickname.setText(MyApp.getApp().getUser().getNickname());
 
+        TextView signOut = (TextView) findViewById(R.id.textView_signout);
+
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    auth.signOut();
+                    Toast.makeText(ProfileActivity.this,"Bye..!",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
+                    startActivity(intent);
+            }
+        });
+
         textView_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveProfile();
             }
         });
+
+        FabLib fab = new FabLib(ProfileActivity.this);
+        fab.setFabMenu();
     }
 
     private void saveProfile(){

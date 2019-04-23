@@ -21,7 +21,7 @@ public class CheckLib {
     }
 
     public boolean isValidPassword(String target) {
-        Pattern p = Pattern.compile("(^.*(?=.{6,100})(?=.*[0-9])(?=.*[a-zA-Z]).*$)");
+        Pattern p = Pattern.compile("(^[a-zA-Z0-9~_&*%.!]*$)");
         Matcher m = p.matcher(target);
         if (m.find() && !target.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
             return true;

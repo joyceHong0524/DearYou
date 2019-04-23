@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.junga.dearyou.lib.FabLib;
 
 import org.w3c.dom.Text;
 
@@ -76,6 +77,9 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         } else{
             Glide.with(this).load(R.drawable.icon_open).into(imageView_locker);
         }
+
+        FabLib fab = new FabLib(EditDiary.this);
+        fab.setFabMenu();
     }
 
 

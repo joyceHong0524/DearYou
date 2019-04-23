@@ -12,6 +12,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.junga.dearyou.lib.FabLib;
+
 import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setInfoView();
         setRecyclerView();
+        FabLib fab = new FabLib(MainActivity.this);
+        fab.setFabMenu();
     }
 
     //When user comes back to main activity, reload recyclerView.
@@ -75,45 +79,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.fab_menu) {
-            if (!isMenuOpen) {
-                showFABMenu();
-            } else {
-                closeFABMenu();
-            }
-        } else if (v.getId() == R.id.fab_add) {
-            Intent intent = new Intent(MainActivity.this, WritingActivity.class);
-            intent.putExtra("mode", 0); // value 1 : update , value 0 : initial save.
-            startActivity(intent);
-        } else if (v.getId() == R.id.fab_surfing) {
-
-        } else if (v.getId() == R.id.fab_friends) {
-            Intent intent = new Intent(MainActivity.this, FriendActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.fab_setting) {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.info) {
+        if (v.getId() == R.id.info) {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
         }
     }
 
-    private void showFABMenu() {
-        isMenuOpen = true;
-        fab_setting.animate().translationY(-getResources().getDimension(R.dimen.standard_65));
-        fab_friends.animate().translationY(-getResources().getDimension(R.dimen.standard_135));
-        fab_surfing.animate().translationY(-getResources().getDimension(R.dimen.standard_205));
-        fab_add.animate().translationY(-getResources().getDimension(R.dimen.standard_275));
-    }
-
-    private void closeFABMenu() {
-        isMenuOpen = false;
-        fab_add.animate().translationY(0);
-        fab_surfing.animate().translationY(0);
-        fab_friends.animate().translationY(0);
-        fab_setting.animate().translationY(0);
-    }
 
 
     private void setRecyclerView() {

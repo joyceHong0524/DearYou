@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firestore.v1.DocumentTransform;
+import com.junga.dearyou.lib.FabLib;
 
 
 import java.sql.Time;
@@ -114,6 +115,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             Glide.with(this).load(R.drawable.icon_lock).into(locker);
         }
 
+        FabLib fab = new FabLib(WritingActivity.this);
+        fab.setFabMenu();
 
     }
 

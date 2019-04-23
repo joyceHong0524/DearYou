@@ -1,5 +1,6 @@
 package com.junga.dearyou;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -19,6 +20,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
@@ -98,6 +101,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Making your journey...");
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -106,20 +114,32 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             updateDatabase(email); //Auth와 UserDatabase는 email로 연결.
+                            progressDialog.dismiss();
                             toMainActivity();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
 
                         }
                     }
 
                     ;
 
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof FirebaseAuthWeakPasswordException) {
+                            Log.d(TAG,"FirebaseAuthWeakPassword Exception occured : "+e.getLocalizedMessage());
+                            Toast.makeText(SignUpActivity.this, "Sign-up failed.",Toast.LENGTH_SHORT).show();
+                            passwordWrapper.setError(((FirebaseAuthWeakPasswordException) e).getReason());
+                            progressDialog.dismiss();
+                        }
+
+                        if(e instanceof FirebaseAuthUserCollisionException){
+                            Log.d(TAG,"FirebaseAuthUserCollision Exception occured : "+e.getLocalizedMessage());
+                            Toast.makeText(SignUpActivity.this, "Sign-up failed.",Toast.LENGTH_SHORT).show();
+                            emailWrapper.setError(e.getLocalizedMessage());
+                            progressDialog.dismiss();
+                        }
+                    }
                 });
 
     }
@@ -188,7 +208,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
-            passwordWrapper.setError("Invalid password");
+            passwordWrapper.setError("Only a-z,A-Z,&*%.! is allowed. More than 6 characters.");
             flag = false;
         }
 

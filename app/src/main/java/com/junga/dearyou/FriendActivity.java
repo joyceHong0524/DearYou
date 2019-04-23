@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.junga.dearyou.lib.FabLib;
 
 import org.w3c.dom.Text;
 
@@ -63,6 +64,8 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
        friendVisit.setOnClickListener(this);
 
        setRecyclerView();
+        FabLib fab = new FabLib(FriendActivity.this);
+        fab.setFabMenu();
     }
 
     @Override

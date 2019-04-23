@@ -143,6 +143,12 @@
     <color name="medium_blue">#0000CD</color>
     <color name="dark_blue">#00008B</color>
     <color name="navy">#000080</color>
-    <color name="black">#000000</color>
+    <color name="black">#270E0E</color>
+
+    <color name="fab1">#FFEBCD</color>
+    <color name="fab2">	#FFDEAD</color>
+    <color name="fab3">#DEB887</color>
+    <color name="fab4">#CD853F</color>
+    <color name="fab5">	#A0522D</color>
 
 </resources>
