@@ -33,14 +33,15 @@
 
 
     <android.support.v7.widget.RecyclerView
+        android:background="@drawable/background_login2"
         android:id="@+id/recyclerView"
         android:layout_below="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
        >
 
     </android.support.v7.widget.RecyclerView>
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"

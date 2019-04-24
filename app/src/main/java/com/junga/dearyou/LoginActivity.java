@@ -20,16 +20,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,14 +52,19 @@ import com.junga.dearyou.lib.CheckLib;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener,GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = getClass().getSimpleName();
+    private final int EMAIL_LOGIN =0;
+    private final int GOOGLE_LOGIN =1;
 
+
+    private static final int RC_SIGN_IN =1000;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
@@ -70,6 +84,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean flag;
 
+    private GoogleApiClient mGoogleApiClient;
+
     UserItem userItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         emailWrapper = (TextInputLayout) findViewById(R.id.email_wrapper);
         passwordWrapper = (TextInputLayout) findViewById(R.id.password_wrapper);
 
-        button_google.setOnClickListener(this);
+
         button_facebook.setOnClickListener(this);
         button_login.setOnClickListener(this);
         textView_signup.setOnClickListener(this);
@@ -102,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(user!=null){
                     //User is signed in
                     Log.d(TAG,"onAuthStateChanged:signed_in"+user.getUid());
-                    setMyAppUser(user.getEmail());
+                    setMyAppUser(user.getEmail(),user.getDisplayName(),GOOGLE_LOGIN);
                 } else{
                     //User is signed out
                     Log.d(TAG,"onAuthStateChanged:signed_out");
@@ -110,6 +126,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         };
         userItem = MyApp.getApp().getUser(); //새로운 useritem을 가져온다.
+
+
+        setGoogleLogin();
     }
 
     @Override
@@ -162,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             progressDialog.dismiss(); // hide a progress dialog.
                             input_email.setText("");
                             input_password.setText("");
-                            setMyAppUser(user.getEmail());
+                            setMyAppUser(user.getEmail(),"",EMAIL_LOGIN);
 
                         }
                     }
@@ -188,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void setMyAppUser(String email){
+    private void setMyAppUser(final String email, final String nickname, final int loginType){
         CollectionReference userCollection = db.collection("User");
         Query getUserQuery = userCollection.whereEqualTo("email",email);
 
@@ -203,9 +222,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                        userItem = document.toObject(UserItem.class);
                       MyApp.getApp().setUser(userItem);
                       handler.sendEmptyMessage(0);
-                   }else {
-                       Log.d(TAG,"can't find user. docs size = "+docs.size());
-                       return;
+                   }else if (docs.size()==0){
+                       if(loginType==EMAIL_LOGIN) {
+                           Log.d(TAG, "can't find user. docs size = " + docs.size());
+                           return;
+                       } else if(loginType== GOOGLE_LOGIN){
+                           UserItem data = new UserItem("", email, nickname, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());;
+                            MyApp.getApp().setUser(data);
+                           db.collection("User")
+                                   .add(data)
+                                   .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                       @Override
+                                       public void onSuccess(DocumentReference documentReference) {
+                                           Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                           //여기서 userId는 user doc의 자동생성된 값을 말한다.
+                                          final String userId = documentReference.getId();
+                                           db.collection("User").document(userId)
+                                                   .update("userId", userId)
+                                                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                       @Override
+                                                       public void onSuccess(Void aVoid) {
+                                                           Log.d(TAG, "Document updated!");
+                                                           UserItem newUser = MyApp.getApp().getUser();
+                                                           newUser.setUserId(userId);
+                                                           MyApp.getApp().setUser(newUser);
+                                                           Log.d(TAG,"MyApp"+MyApp.getApp().getUser().getEmail());
+                                                           Log.d(TAG,"Google: "+email);
+                                                           Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                                           startActivity(intent);
+                                                       }
+                                                   })
+                                                   .addOnFailureListener(new OnFailureListener() {
+                                                       @Override
+                                                       public void onFailure(@NonNull Exception e) {
+                                                           Log.d(TAG, "something went wrong");
+                                                       }
+                                                   });
+                                       }
+                                   })
+                                   .addOnFailureListener(new OnFailureListener() {
+                                       @Override
+                                       public void onFailure(@NonNull Exception e) {
+                                           Log.w(TAG, "Error adding document", e);
+
+                                       }
+                                   });
+
+
+                       }
                    }
                 }
             }
@@ -258,5 +322,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         return flag;
+    }
+
+    private void setGoogleLogin(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
+
+
+        button_google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent,RC_SIGN_IN);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_SIGN_IN){
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()){
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
+        final String email = acct.getEmail();
+        final String nickname= acct.getEmail();
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(!task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
+                            setMyAppUser(email, nickname,GOOGLE_LOGIN);
+                        }else{
+                            Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

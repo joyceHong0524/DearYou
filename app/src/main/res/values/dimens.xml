@@ -4,7 +4,7 @@
     <dimen name="standard_135">135dp</dimen>
     <dimen name="standard_205">205dp</dimen>
     <dimen name="standard_275">275dp</dimen>
-    <dimen name="row_height">150dp</dimen>
+    <dimen name="row_height">180dp</dimen>
     <dimen name="spacing_small">5dp</dimen>
     <dimen name="spacing_medium">10dp</dimen>
     <dimen name="spacing_large">18dp</dimen>

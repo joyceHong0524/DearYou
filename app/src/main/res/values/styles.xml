@@ -17,7 +17,7 @@
     <style name="TextLabel" parent="Widget.Design.TextInputLayout">
 
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">#868282</item>
+        <item name="android:textColorHint">#252020</item>
         <item name="android:textSize">17sp</item>
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->

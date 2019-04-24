@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="@dimen/row_height"
-    android:padding="30dp"
+    android:layout_height="wrap_content"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="45dp"
+    android:paddingBottom="45dp"
     android:id="@+id/row"
+    android:background="@drawable/row3"
+    android:clipToPadding="true"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginTop="3dp"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="20dp">
         <TextView
             android:id="@+id/textView_title"
             android:layout_width="0dp"
@@ -34,7 +43,7 @@
         android:id="@+id/textView_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="2"
+        android:maxLines="3"
         android:ellipsize="end"
         android:text="It was such a pleasure to meet you alwaysIt was such a pleasure to meet you alwaysIt was such a pleasure to meet you alwaysIt was such a pleasure to meet you alwaysIt was such a pleasure to meet you alwaysIt was such a pleasure to meet you alwaysIt was such a pleasure to meet you always"/>
 

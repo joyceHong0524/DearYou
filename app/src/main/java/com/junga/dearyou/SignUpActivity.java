@@ -169,6 +169,31 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 });
     }
 
+    //for social login sign up
+    public void updateDatabase(String userEmail,String nickname) {
+        UserItem data = new UserItem("", userEmail, nickname, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());
+        MyApp.getApp().setUser(data);
+
+        db.collection("User")
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        //여기서 userId는 user doc의 자동생성된 값을 말한다.
+                        String userId = documentReference.getId();
+                        updateUserId(userId);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+
+                    }
+                });
+    }
+
     private void updateUserId(String userId) {
         db.collection("User").document(userId)
                 .update("userId", userId)
@@ -192,7 +217,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         MyApp.getApp().setUser(newUser); //이제 전체에서 쓸 수가 있다.
     }
 
-    private void toMainActivity() {
+    public void toMainActivity() {
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }

@@ -2,4 +2,7 @@
     <string name="app_name">DearYou</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="facebook_app_id">278361193069366</string>
+    <string name="fb_login_protocol_scheme">fb278361193069366</string>
+    <string name="default_web_client_id">405726014562-5koa3m4lcjs6p1kdaqomo7oklft3pvs7.apps.googleusercontent.com</string>
 </resources>
