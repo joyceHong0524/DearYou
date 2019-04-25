@@ -20,6 +20,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,6 +42,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -53,6 +64,7 @@ import com.junga.dearyou.lib.CheckLib;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private final String TAG = getClass().getSimpleName();
     private final int EMAIL_LOGIN =0;
-    private final int GOOGLE_LOGIN =1;
+    private final int SOCIAL_LOGIN =1;
 
 
     private static final int RC_SIGN_IN =1000;
@@ -78,6 +90,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     TextInputLayout emailWrapper;
     TextInputLayout passwordWrapper;
+
+    CallbackManager mCallbackManager;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -108,6 +122,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_login.setOnClickListener(this);
         textView_signup.setOnClickListener(this);
 
+//        facebook = (LoginButton) findViewById(R.id.facebook);
+        mCallbackManager = CallbackManager.Factory.create();
+
+//        facebook.setReadPermissions("email","public_profile");
+//        facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                handleFacebookAccessToken(loginResult.getAccessToken());
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//
+//            }
+//        });
+
         mAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener(){
 
@@ -118,7 +153,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(user!=null){
                     //User is signed in
                     Log.d(TAG,"onAuthStateChanged:signed_in"+user.getUid());
-                    setMyAppUser(user.getEmail(),user.getDisplayName(),GOOGLE_LOGIN);
+                    String email = user.getEmail();
+                    CollectionReference userCollection = db.collection("User");
+                    Query getUserQuery = userCollection.whereEqualTo("email",email);
+
+                    getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                List<DocumentSnapshot> docs = querySnapshot.getDocuments();
+                                if(docs.size()==1) {
+                                    DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
+                                    userItem = document.toObject(UserItem.class);
+                                    MyApp.getApp().setUser(userItem);
+                                    handler.sendEmptyMessage(0);
+                                }
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG,"Something went wrong"+e);
+                        }
+                    });
+
+
+
+
                 } else{
                     //User is signed out
                     Log.d(TAG,"onAuthStateChanged:signed_out");
@@ -150,6 +212,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.button_google){
 
         } else if(v.getId() == R.id.button_facebook){
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                    Arrays.asList("public_profile", "user_friends"));
+            LoginManager.getInstance().registerCallback(mCallbackManager, //after onActivityResult 다음에 trigerred 됨
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            Log.e("onSuccess", "onSuccess");
+                            handleFacebookAccessToken(loginResult.getAccessToken());
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            Log.e("onCancel", "onCancel");
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                            Log.e("onError", "onError " + exception.getLocalizedMessage());
+                        }
+                    });
+
 
         } else if(v.getId() == R.id.button_login){
             login();
@@ -226,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                        if(loginType==EMAIL_LOGIN) {
                            Log.d(TAG, "can't find user. docs size = " + docs.size());
                            return;
-                       } else if(loginType== GOOGLE_LOGIN){
+                       } else if(loginType== SOCIAL_LOGIN){
                            UserItem data = new UserItem("", email, nickname, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());;
                             MyApp.getApp().setUser(data);
                            db.collection("User")
@@ -356,7 +439,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }
+
         }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
@@ -370,7 +455,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
-                            setMyAppUser(email, nickname,GOOGLE_LOGIN);
+                            setMyAppUser(email, nickname,SOCIAL_LOGIN);
+
                         }else{
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
                         }
@@ -382,4 +468,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    private void handleFacebookAccessToken(AccessToken token){
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        AuthResult result = task.getResult();
+                        FirebaseUser user = result.getUser();
+                        String email = user.getEmail();
+                        String nickname = user.getDisplayName();
+
+                        Log.d("facebook email ",email);
+                        Log.d("nickname ",nickname);
+                        setMyAppUser(email, nickname,SOCIAL_LOGIN);
+                        Toast.makeText(LoginActivity.this,"facebook login 성공",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+    }
+
+
+
 }

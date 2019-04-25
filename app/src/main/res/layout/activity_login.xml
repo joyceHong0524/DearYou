@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fb="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@drawable/background_login2"
     android:focusable="true"
@@ -59,6 +60,7 @@
                 android:layout_marginRight="10dp"
                 />
 
+
             <com.shaishavgandhi.loginbuttons.FacebookButton
                 android:id="@+id/button_facebook"
                 android:layout_width="0dp"
@@ -70,6 +72,16 @@
                 android:text="Facebook"
                 android:layout_height="wrap_content"
                 />
+
+            <!--<com.facebook.login.widget.LoginButton-->
+                <!--android:id="@+id/facebook"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:padding="10dp"-->
+                <!--android:textSize="15dp"-->
+                <!--/>-->
 
         </LinearLayout>
 

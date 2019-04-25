@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -52,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                     auth.signOut();
+                LoginManager.getInstance().logOut();
                     Toast.makeText(ProfileActivity.this,"Bye..!",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
                     startActivity(intent);

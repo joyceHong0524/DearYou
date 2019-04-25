@@ -21,9 +21,10 @@ android {
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:animated-vector-drawable:27.1.1'
+
     implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.shaishavgandhi:login-buttons:1.0.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
