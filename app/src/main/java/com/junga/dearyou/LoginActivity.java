@@ -473,23 +473,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void handleFacebookAccessToken(AccessToken token){
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        AuthResult result = task.getResult();
-                        FirebaseUser user = result.getUser();
-                        String email = user.getEmail();
-                        String nickname = user.getDisplayName();
+               .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                   @Override
+                   public void onSuccess(AuthResult authResult) {
+                       FirebaseUser user = authResult.getUser();
+                       String email = user.getEmail();
+                       String nickname = user.getDisplayName();
 
-                        Log.d("facebook email ",email);
-                        Log.d("nickname ",nickname);
-                        setMyAppUser(email, nickname,SOCIAL_LOGIN);
-                        Toast.makeText(LoginActivity.this,"facebook login 성공",Toast.LENGTH_SHORT).show();
-                    }
-                })
+                       Log.d("facebook email ",email);
+                       Log.d("nickname ",nickname);
+
+                       setMyAppUser(email, nickname,SOCIAL_LOGIN);
+
+                       Toast.makeText(LoginActivity.this,"facebook login 성공",Toast.LENGTH_SHORT).show();
+                   }
+               })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,"why 2");
+                        if(e instanceof FirebaseAuthUserCollisionException){
+                            Toast.makeText(LoginActivity.this,"Your account was registered in another way.",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login using"
+            android:text="Continued with"
             android:fontFamily="sans-serif-light"
             android:layout_marginBottom="15dp"/>
 
@@ -144,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="No account yet? Click Here"
+            android:text="Sign up with Email? Click Here"
             android:fontFamily="sans-serif-light"
             android:layout_marginTop="25dp"
             />

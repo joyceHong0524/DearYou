@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:padding="20dp">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"
@@ -152,7 +153,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:text="11123"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_margin="20dp"/>

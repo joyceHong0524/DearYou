@@ -49,6 +49,13 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     MyDiaryAdapter adapter;
 
+    FabLib fab;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.closeFABMenu();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +102,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        FabLib fab = new FabLib(FriendMainActivity.this);
+        fab = new FabLib(FriendMainActivity.this);
         fab.setFabMenu();
 
 

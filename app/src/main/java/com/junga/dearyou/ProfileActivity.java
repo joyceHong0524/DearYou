@@ -35,6 +35,14 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    FabLib fab;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.closeFABMenu();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        FabLib fab = new FabLib(ProfileActivity.this);
+        fab = new FabLib(ProfileActivity.this);
         fab.setFabMenu();
     }
 

@@ -46,6 +46,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
     private TextView textView_delete;
     private ImageView imageView_locker;
 
+    FabLib fab;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String diaryId; //For method delete diary , 2.Diarydata delete
@@ -66,7 +67,8 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         content = getIntent().getStringExtra("content");
         isLocked = getIntent().getBooleanExtra("isLocked",false);
         position = getIntent().getIntExtra("position", NO_POSITION);
-        textView_title.setText(title);
+        String setTitle= "< "+title+" >";
+        textView_title.setText(setTitle);
         textView_content.setText(content);
 
         textView_edit.setOnClickListener(this);
@@ -78,7 +80,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
             Glide.with(this).load(R.drawable.icon_open).into(imageView_locker);
         }
 
-        FabLib fab = new FabLib(EditDiary.this);
+        fab = new FabLib(EditDiary.this);
         fab.setFabMenu();
     }
 
@@ -100,6 +102,12 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 deleteDiary();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.closeFABMenu();
     }
 
     private void deleteDiary() {

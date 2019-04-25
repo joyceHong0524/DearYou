@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.Toast;
 
 import com.junga.dearyou.FriendActivity;
 import com.junga.dearyou.MainActivity;
@@ -28,6 +29,15 @@ public class FabLib {
 
     public FabLib(Activity mActivity){
         this.mActivity = mActivity;
+    }
+
+    public boolean isMenuOpen() {
+        return isMenuOpen;
+    }
+
+    public void setMenuOpen(boolean menuOpen) {
+        isMenuOpen = menuOpen;
+        setFabMenu();
     }
 
     public void setFabMenu() {
@@ -63,7 +73,7 @@ public class FabLib {
         fab_surfing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(mActivity,"Coming Soon!",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -86,7 +96,7 @@ public class FabLib {
     }
 
 
-    private void showFABMenu() {
+    public void showFABMenu() {
         isMenuOpen = true;
         fab_setting.animate().translationY(-mActivity.getResources().getDimension(R.dimen.standard_65));
         fab_friends.animate().translationY(-mActivity.getResources().getDimension(R.dimen.standard_135));
@@ -100,7 +110,7 @@ public class FabLib {
 
     }
 
-    private void closeFABMenu() {
+    public void closeFABMenu() {
         isMenuOpen = false;
         fab_add.animate().translationY(0);
         fab_surfing.animate().translationY(0);

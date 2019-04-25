@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView nickname;
 
     boolean isMenuOpen = false;
+    FabLib fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,18 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View info = (View) findViewById(R.id.info);
         info.setOnClickListener(this);
 
-        fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
-        fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
-        fab_surfing = (FloatingActionButton) findViewById(R.id.fab_surfing);
-        fab_friends = (FloatingActionButton) findViewById(R.id.fab_friends);
-        fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
-
-        fab_add.setOnClickListener(this);
-        fab_menu.setOnClickListener(this);
-        fab_surfing.setOnClickListener(this);
-        fab_friends.setOnClickListener(this);
-        fab_setting.setOnClickListener(this);
-
         diaryName = (TextView) findViewById(R.id.diaryName);
         nickname = (TextView) findViewById(R.id.nickname);
 
@@ -63,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setInfoView();
         setRecyclerView();
-        FabLib fab = new FabLib(MainActivity.this);
+        fab = new FabLib(MainActivity.this);
         fab.setFabMenu();
     }
 
@@ -74,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Writing Activity에서 다시 돌아왔을 때 RecyclerView를 다시 로딩한다.
         setRecyclerView();
         setInfoView();
-
+        fab.closeFABMenu();
     }
 
     @Override

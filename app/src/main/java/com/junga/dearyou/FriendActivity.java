@@ -42,6 +42,8 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
     UserItem friendUser;
 
+    FabLib fab;
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -64,7 +66,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
        friendVisit.setOnClickListener(this);
 
        setRecyclerView();
-        FabLib fab = new FabLib(FriendActivity.this);
+        fab = new FabLib(FriendActivity.this);
         fab.setFabMenu();
     }
 
@@ -72,6 +74,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         setRecyclerView();
+        fab.closeFABMenu();
     }
 
     @Override

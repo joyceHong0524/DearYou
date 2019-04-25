@@ -54,6 +54,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     ImageView locker;
 
+    FabLib fab;
     //variable for update
     int position;
     String diaryId;
@@ -86,6 +87,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 int letters = description.getText().toString().length();
                 String showLetters = String.valueOf(letters) + " letters..";
                 textCount.setText(showLetters);
@@ -96,6 +98,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
+
 
         mode = getIntent().getIntExtra("mode", 100);
         if (mode == 1) {//edit mode
@@ -115,7 +119,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             Glide.with(this).load(R.drawable.icon_lock).into(locker);
         }
 
-        FabLib fab = new FabLib(WritingActivity.this);
+        fab = new FabLib(WritingActivity.this);
         fab.setFabMenu();
 
     }
@@ -349,6 +353,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.closeFABMenu();
     }
 }
 
