@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.junga.dearyou.lib.FontLib;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
     Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    FontLib fontLib = new FontLib();
 
     public MyFriendAdapter(Context context, Activity mActivity, ArrayList<String> friendList) {
         this.friendList = friendList;
@@ -104,6 +106,10 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
             friend_nickname = (TextView) itemView.findViewById(R.id.friend_nickname);
             friend_diaryName= (TextView) itemView.findViewById(R.id.friend_diaryName);
             last_update =  (TextView) itemView.findViewById(R.id.last_update);
+
+            fontLib.setFont(mActivity,"inconsolata_bold",friend_nickname);
+            fontLib.setFont(mActivity,"inconsolata",friend_diaryName);
+
         }
     }
 

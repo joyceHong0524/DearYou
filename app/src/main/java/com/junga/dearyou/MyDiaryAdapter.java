@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentChange;
+import com.junga.dearyou.lib.FontLib;
 import com.junga.dearyou.lib.TimeLib;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +30,8 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     MyDiaryAdapter adapter;
     Activity mActivity;
     int mode;
+
+    FontLib fontLib = new FontLib();
 
 
     public MyDiaryAdapter(Activity mActivity,Context context, ArrayList<DiaryItem> diaryList,int mode) {
@@ -64,7 +67,6 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
                 startEditActivity(diaryList.size()-1-position,diary.getTitle(),diary.getContent(),diary.isLocked());
                 }
             });} else if (mode == FRIEND_MAIN){
-
                 holder.myView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -92,6 +94,9 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
             title = (TextView)  itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.textView_date);
             content = (TextView) itemView.findViewById(R.id.textView_content);
+            fontLib.setFont(mActivity,"inconsolata",content);
+            fontLib.setFont(mActivity,"oleo_script",title);
+            fontLib.setFont(mActivity,"inconsolata",date);
         }
     }
 

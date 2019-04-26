@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.junga.dearyou.lib.FontLib;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class FriendViewActivity extends AppCompatActivity implements View.OnClic
     TextView back;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FontLib fontLib = new FontLib();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,10 @@ public class FriendViewActivity extends AppCompatActivity implements View.OnClic
         back = (TextView) findViewById(R.id.textView_back);
 
         back.setOnClickListener(this);
+
+        fontLib.setFont(this,"oleo_script_bold",title);
+        fontLib.setFont(this,"inconsolata",content);
+        fontLib.setFont(this,"inconsolata",back);
 
         setDiary();
     }

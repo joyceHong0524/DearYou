@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:padding="15dp"
     >
     <RelativeLayout
     android:layout_width="0dp"
@@ -18,6 +19,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textSize="18dp"
+        android:text="3dflkja;f"
         android:fontFamily="sans-serif-light"
         android:textStyle="italic"
         />
@@ -30,6 +32,7 @@
             android:layout_below="@+id/friend_nickname"
             android:layout_marginLeft="10dp"
             android:textSize="12dp"
+            android:text="3dflkja;f"
             android:fontFamily="sans-serif-light"
             android:textStyle="italic"
             />
@@ -51,6 +54,7 @@
             android:text="Last Update"
             android:fontFamily="sans-serif-light"
             android:layout_marginBottom="1dp"
+            android:visibility="invisible"
 
             />
 
@@ -61,6 +65,7 @@
             android:text="3days ago"
             android:fontFamily="sans-serif-light"
             android:textSize="12dp"
+            android:visibility="invisible"
             />
     </LinearLayout>
 </LinearLayout>

@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.junga.dearyou.lib.FabLib;
+import com.junga.dearyou.lib.FontLib;
 
 import org.w3c.dom.Text;
 
@@ -46,11 +47,13 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
     private TextView textView_delete;
     private ImageView imageView_locker;
 
-    FabLib fab;
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String diaryId; //For method delete diary , 2.Diarydata delete
 
+    FabLib fab;
+    FontLib fontLib = new FontLib();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,10 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         textView_edit.setOnClickListener(this);
         textView_delete.setOnClickListener(this);
 
+
+
+        fontLib.setFont(this,"oleo_script_bold",textView_title);
+        fontLib.setFont(this,"inconsolata",textView_content);
         if(isLocked){
             Glide.with(this).load(R.drawable.icon_lock).into(imageView_locker);
         } else{
@@ -96,6 +103,7 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 intent.putExtra("isLocked",isLocked);
                 intent.putExtra("mode", UPDATE); //update mode라는 것!
                 startActivity(intent);
+                finish();
             }
         }else if (v.getId() == R.id.textView_delete) {
             if (position != NO_POSITION) {

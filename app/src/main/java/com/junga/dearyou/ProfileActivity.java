@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.model.Document;
 import com.junga.dearyou.lib.FabLib;
+import com.junga.dearyou.lib.FontLib;
 
 import org.w3c.dom.Text;
 
@@ -36,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
     FabLib fab;
-
+    FontLib fontLib = new FontLib();
     @Override
     protected void onResume() {
         super.onResume();
@@ -77,6 +78,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         fab = new FabLib(ProfileActivity.this);
         fab.setFabMenu();
+
+        fontLib.setFont(this,"oleo_script",editText_nickname);
+        fontLib.setFont(this,"oleo_script",editText_diaryName);
+        fontLib.setFont(this,"oleo_script_bold",signOut);
     }
 
     private void saveProfile(){

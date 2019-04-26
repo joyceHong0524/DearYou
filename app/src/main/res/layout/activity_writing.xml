@@ -126,6 +126,7 @@
             android:layout_height="wrap_content"
             android:hint="Title"
             android:inputType="text"
+            android:textSize="24dp"
             android:fontFamily="sans-serif-medium"
             android:layout_margin="10dp"/>
 
@@ -144,6 +145,7 @@
             android:layout_width="fill_parent"
             android:scrollbars="vertical"
             android:background="@null"
+            android:textSize="16sp"
             android:fontFamily="sans-serif-light"/>
     </ScrollView>
 

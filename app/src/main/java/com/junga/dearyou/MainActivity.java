@@ -1,20 +1,18 @@
 package com.junga.dearyou;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.junga.dearyou.lib.FabLib;
-
-import org.w3c.dom.Text;
+import com.junga.dearyou.lib.FontLib;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     boolean isMenuOpen = false;
     FabLib fab;
 
+    FontLib fontLib = new FontLib();
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         String email = getIntent().getStringExtra("email");
-
+        setFont();
         setInfoView();
         setRecyclerView();
         fab = new FabLib(MainActivity.this);
@@ -74,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-
     private void setRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -92,5 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String setTextNickname = "By " + MyApp.getApp().getUser().getNickname();
         nickname.setText(setTextNickname);
 
+    }
+
+    private void setFont(){
+        fontLib.setFont(this,"oleo_script_bold",diaryName);
+        fontLib.setFont(this,"oleo_script",nickname);
     }
 }

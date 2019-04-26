@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.junga.dearyou.lib.FabLib;
+import com.junga.dearyou.lib.FontLib;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
     FabLib fab;
 
+    FontLib fontLib = new FontLib();
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -72,6 +75,9 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
         friend_status = (ImageView) findViewById(R.id.friend_status);
 
         friend_status.setOnClickListener(this);
+
+        fontLib.setFont(this,"oleo_script_bold",friend_diaryName);
+        fontLib.setFont(this,"oleo_script",friend_nickname);
 
 
         // get friend userItem.
@@ -118,9 +124,9 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
         Log.d(TAG, "Is this my friend? " + isFriend);
         if (isFriend) {
-            Glide.with(this).load(R.drawable.checked_user).into(friend_status);
+            Glide.with(this).load(R.drawable.friend_checked).into(friend_status);
         } else {
-            Glide.with(this).load(R.drawable.add_user).into(friend_status);
+            Glide.with(this).load(R.drawable.friend_add).into(friend_status);
         }
 
         //2. Set Diaryname and set friend name;
@@ -199,7 +205,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
             //update info ui
 
             isFriend = true;
-            Glide.with(this).load(R.drawable.checked_user).into(friend_status);
+            Glide.with(this).load(R.drawable.friend_checked).into(friend_status);
         } else {
 
             ArrayList<String> newFriends = MyApp.getApp().getUser().getFriends();
@@ -240,7 +246,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
             });
 
             isFriend = false;
-            Glide.with(this).load(R.drawable.add_user).into(friend_status);
+            Glide.with(this).load(R.drawable.friend_add).into(friend_status);
         }
     }
 

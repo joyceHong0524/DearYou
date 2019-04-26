@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.junga.dearyou.lib.FabLib;
+import com.junga.dearyou.lib.FontLib;
 
 import org.w3c.dom.Text;
 
@@ -43,7 +44,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
     UserItem friendUser;
 
     FabLib fab;
-
+    FontLib fontLib = new FontLib();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -64,6 +65,8 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
        textView_search.setOnClickListener(this);
        friendVisit.setOnClickListener(this);
+
+       fontLib.setFont(this,"oleo_script_bold",editText_search);
 
        setRecyclerView();
         fab = new FabLib(FriendActivity.this);

@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firestore.v1.DocumentTransform;
 import com.junga.dearyou.lib.FabLib;
+import com.junga.dearyou.lib.FontLib;
 
 
 import java.sql.Time;
@@ -65,6 +66,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    FontLib fontLib = new FontLib();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,11 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
         save.setOnClickListener(this);
         locker.setOnClickListener(this);
+
+
+        fontLib.setFont(this,"oleo_script_bold",title);
+        fontLib.setFont(this,"inconsolata",description);
+        fontLib.setFont(this,"inconsolata",textCount);
 
         description.addTextChangedListener(new TextWatcher() {
             @Override

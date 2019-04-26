@@ -116,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/menu_top"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="18dp"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:layout_marginBottom="10dp"
@@ -124,7 +124,7 @@
         android:textStyle="italic"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textSize="18sp"
+        android:textSize="30sp"
         android:gravity="center_horizontal"
         />
 
@@ -135,7 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView_title"
         android:fontFamily="sans-serif-thin"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:layout_margin="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"/>
