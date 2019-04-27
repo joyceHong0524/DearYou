@@ -374,7 +374,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(msg.what == 0){
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 Log.d(TAG,"Start Main Activity");
-                Toast.makeText(LoginActivity.this, "Hello! "+MyApp.getApp().getUser().getNickname(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "How was your day?"+MyApp.getApp().getUser().getNickname(),Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
             }
