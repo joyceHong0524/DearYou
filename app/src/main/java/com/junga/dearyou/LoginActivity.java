@@ -374,7 +374,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(msg.what == 0){
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 Log.d(TAG,"Start Main Activity");
-                Toast.makeText(LoginActivity.this, "How was your day?"+MyApp.getApp().getUser().getNickname(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "How was your day? "+MyApp.getApp().getUser().getNickname()+" :)",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
             }
@@ -454,11 +454,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                             setMyAppUser(email, nickname,SOCIAL_LOGIN);
 
                         }else{
-                            Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Google login succeed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -485,7 +485,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                        setMyAppUser(email, nickname,SOCIAL_LOGIN);
 
-                       Toast.makeText(LoginActivity.this,"facebook login 성공",Toast.LENGTH_SHORT).show();
+                       Toast.makeText(LoginActivity.this,"facebook login succeed.",Toast.LENGTH_SHORT).show();
                    }
                })
                 .addOnFailureListener(new OnFailureListener() {
