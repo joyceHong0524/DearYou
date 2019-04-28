@@ -59,19 +59,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        Button button_google;
-        Button button_facebook;
         Button button_signup;
         TextView textView_login;
 
-
-        button_google = (Button) findViewById(R.id.button_google);
-        button_facebook = (Button) findViewById(R.id.button_facebook);
         button_signup = (Button) findViewById(R.id.button_signup);
         textView_login = (TextView) findViewById(R.id.textView_login);
 
-        button_google.setOnClickListener(this);
-        button_facebook.setOnClickListener(this);
         button_signup.setOnClickListener(this);
         textView_login.setOnClickListener(this);
 
@@ -89,6 +82,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.button_signup) {
             signup();
+        } if(v.getId() == R.id.textView_login){
+            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

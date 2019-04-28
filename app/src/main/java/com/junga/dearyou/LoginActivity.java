@@ -122,26 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_login.setOnClickListener(this);
         textView_signup.setOnClickListener(this);
 
-//        facebook = (LoginButton) findViewById(R.id.facebook);
         mCallbackManager = CallbackManager.Factory.create();
-
-//        facebook.setReadPermissions("email","public_profile");
-//        facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                handleFacebookAccessToken(loginResult.getAccessToken());
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//
-//            }
-//        });
 
         mAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener(){
@@ -333,6 +314,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                            Log.d(TAG,"Google: "+email);
                                                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                                                            startActivity(intent);
+                                                           finish();
                                                        }
                                                    })
                                                    .addOnFailureListener(new OnFailureListener() {
@@ -447,7 +429,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
         final String email = acct.getEmail();
-        final String nickname= acct.getEmail();
+        final String nickname= acct.getDisplayName();
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -455,10 +437,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                            setMyAppUser(email, nickname,SOCIAL_LOGIN);
+
 
                         }else{
                             Toast.makeText(LoginActivity.this, "Google login succeed.", Toast.LENGTH_SHORT).show();
+                            setMyAppUser(email, nickname,SOCIAL_LOGIN);
                         }
                     }
                 });
@@ -480,9 +463,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                        String email = user.getEmail();
                        String nickname = user.getDisplayName();
 
-                       Log.d("facebook email ",email);
-                       Log.d("nickname ",nickname);
-
                        setMyAppUser(email, nickname,SOCIAL_LOGIN);
 
                        Toast.makeText(LoginActivity.this,"facebook login succeed.",Toast.LENGTH_SHORT).show();
@@ -498,7 +478,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
-
-
 
 }
