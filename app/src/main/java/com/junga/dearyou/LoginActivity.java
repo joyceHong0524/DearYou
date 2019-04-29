@@ -35,6 +35,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -96,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    boolean flag;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -416,18 +416,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == RC_SIGN_IN){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try{
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d(TAG,"firebase Auth with google");
                 firebaseAuthWithGoogle(account);
+            }catch (ApiException e){
+                Log.w(TAG, "Google sign in failed",e);
             }
-
         }
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         final String email = acct.getEmail();
         final String nickname= acct.getDisplayName();
 
@@ -437,8 +440,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-
-
                         }else{
                             Toast.makeText(LoginActivity.this, "Google login succeed.", Toast.LENGTH_SHORT).show();
                             setMyAppUser(email, nickname,SOCIAL_LOGIN);

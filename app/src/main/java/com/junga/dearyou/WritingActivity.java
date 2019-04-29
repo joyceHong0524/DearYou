@@ -355,12 +355,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private String getDiaryDate(long timestamp) {
-        DateFormat dateFormat = getDateTimeInstance();
-        Date netDate = (new Date(timestamp));
-        return dateFormat.format(netDate);
-    }
-
     private void lockerChanged() {
         if (isLocked) { //When it was locked, unlock it.
             isLocked = false;
