@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:fontFamily="sans-serif-thin"
-                android:hint="Search with email"
+                android:hint="Search with username"
                 android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>

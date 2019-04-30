@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.junga.dearyou.lib.FabLib;
 import com.junga.dearyou.lib.FontLib;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     TextView diaryName;
     TextView nickname;
+    private int backbuttonPressed = 0;
 
     boolean isMenuOpen = false;
     FabLib fab;
@@ -96,5 +98,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setFont(){
         fontLib.setFont(this,"oleo_script_bold",diaryName);
         fontLib.setFont(this,"oleo_script",nickname);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (backbuttonPressed>=1){
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        } else {
+            Toast.makeText(this,"Press back button to kill this app ",Toast.LENGTH_SHORT).show();
+            backbuttonPressed++;
+        }
     }
 }

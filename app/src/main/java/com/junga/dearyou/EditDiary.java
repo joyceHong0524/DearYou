@@ -2,10 +2,12 @@ package com.junga.dearyou;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,36 +36,27 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
 
     private final int NO_POSITION = -1;
-    private final int UPDATE = 1;
 
     private String title;
     private String content;
     private boolean isLocked;
     private int position; //diary의 위치를 알려줌.
 
-    private TextView textView_title;
-    private TextView textView_content;
-    private TextView textView_edit;
-    private TextView textView_delete;
-    private ImageView imageView_locker;
-
-
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String diaryId; //For method delete diary , 2.Diarydata delete
 
-    FabLib fab;
-    FontLib fontLib = new FontLib();
+    private FabLib fab;
+    private final FontLib fontLib = new FontLib();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_diary);
 
-        textView_title = findViewById(R.id.textView_title);
-        textView_content = findViewById(R.id.textView_content);
-        textView_edit = findViewById(R.id.textView_edit);
-        textView_delete = findViewById(R.id.textView_delete);
-        imageView_locker = findViewById(R.id.icon_locker);
+        TextView textView_title = findViewById(R.id.textView_title);
+        TextView textView_content = findViewById(R.id.textView_content);
+        TextView textView_edit = findViewById(R.id.textView_edit);
+        TextView textView_delete = findViewById(R.id.textView_delete);
+        ImageView imageView_locker = findViewById(R.id.icon_locker);
 
 
         title = getIntent().getStringExtra("title");
@@ -79,8 +72,8 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
 
 
-        fontLib.setFont(this,"oleo_script_bold",textView_title);
-        fontLib.setFont(this,"inconsolata",textView_content);
+        fontLib.setFont(this,"oleo_script_bold", textView_title);
+        fontLib.setFont(this,"inconsolata", textView_content);
         if(isLocked){
             Glide.with(this).load(R.drawable.icon_lock).into(imageView_locker);
         } else{
@@ -101,13 +94,31 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 intent.putExtra("content", content);
                 intent.putExtra("position", position);
                 intent.putExtra("isLocked",isLocked);
+                int UPDATE = 1;
                 intent.putExtra("mode", UPDATE); //update mode라는 것!
                 startActivity(intent);
                 finish();
             }
         }else if (v.getId() == R.id.textView_delete) {
             if (position != NO_POSITION) {
-                deleteDiary();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("This diary will be deleted for good.");
+                builder.setPositiveButton("Delete",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                              deleteDiary();
+                            }
+                        });
+                builder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+
             }
         }
     }
@@ -134,7 +145,6 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
                 ArrayList<DiaryItem> diaries = user.getDiaries();
                 diaryId = diaries.get(position).getDiaryId();
                 diaries.remove(position);
-
                 //update editted diary arraylist.
                 db.collection("User").document(MyApp.getApp().getUser().getUserId())
                         .update("diaries", diaries)
@@ -152,16 +162,12 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
                     }
                 });
-
             }
         });
-
-        //Using handler
-
     }
 
     @SuppressLint("HandlerLeak")
-    private
+    private final
     Handler hanlder = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -195,10 +201,13 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
 
                 finish();
             }
-
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
 
 

@@ -83,6 +83,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
         save.setOnClickListener(this);
         locker.setOnClickListener(this);
+        title.setOnClickListener(this);
+        description.setOnClickListener(this);
 
 
         fontLib.setFont(this,"oleo_script_bold",title);
@@ -166,6 +168,10 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             }
         } else if (v.getId() == R.id.icon_locker) {
             lockerChanged(); //Handler로 관리한다.
+        } else if (v.getId() == R.id.editText_title){
+            title.requestFocus();
+        } else if (v.getId() == R.id.editText_description){
+            description.requestFocus();
         }
     }
 

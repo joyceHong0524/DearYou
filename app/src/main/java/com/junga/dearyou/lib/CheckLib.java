@@ -30,6 +30,13 @@ public class CheckLib {
         }
     }
 
+    public boolean isValidNickname(String target){
+        Pattern p = Pattern.compile("(^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$)");
+        Matcher m = p.matcher(target);
+
+        return m.find();
+    }
+
     public boolean isValidEmail(String target) {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }

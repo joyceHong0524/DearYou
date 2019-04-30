@@ -24,8 +24,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.junga.dearyou.lib.CheckLib;
 
 import org.w3c.dom.Text;
@@ -98,6 +101,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+
+
+        //double check
+
+        if(nameWrapper.isErrorEnabled() || emailWrapper.isErrorEnabled() || passwordWrapper.isErrorEnabled()){
+            return;
+        }
+
+
         final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Making your journey...");
@@ -143,6 +155,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateDatabase(String userEmail) {
         String name = input_name.getText().toString();
+
         UserItem data = new UserItem("", userEmail, name, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());
         ((MyApp) getApplication()).setUser(data);
 
@@ -227,28 +240,83 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
             emailWrapper.setError("Invalid email");
             flag = false;
+        }else{
+            emailWrapper.setErrorEnabled(false);
         }
 
         if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
             passwordWrapper.setError("Only a-z,A-Z,&*%.! is allowed. More than 6 characters.");
             flag = false;
+        } else{
+            passwordWrapper.setErrorEnabled(false);
         }
 
         if (TextUtils.isEmpty(email)){
             emailWrapper.setError("Shouldn't be empty");
             flag = false;
+        } else{
+            emailWrapper.setErrorEnabled(false);
         }
 
         if (TextUtils.isEmpty(password)){
             passwordWrapper.setError("Shouldn't be empty");
             flag = false;
+        }else{
+            passwordWrapper.setErrorEnabled(false);
         }
 
         if(TextUtils.isEmpty(name)){
             nameWrapper.setError("Shouldn't be empty");
             flag = false;
+        }else{
+            nameWrapper.setErrorEnabled(false);
         }
+
+        if(!(Boolean) CheckLib.getInstance().isValidNickname(name)){
+            nameWrapper.setError("Invalid name. Only letters and numbers.");
+            flag = false;
+        } else{
+            nameWrapper.setErrorEnabled(false);
+        }
+
+        //check if nickname has been already taken or not.
+        isNicknameAlreadyTaken(name);
 
         return flag;
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private void isNicknameAlreadyTaken(final String nickname){
+
+
+        Query query = db.collection("User").whereEqualTo("nickname",nickname);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                QuerySnapshot querySnapshot = task.getResult();
+                    if(querySnapshot !=null) {
+                        if (querySnapshot.isEmpty()) {
+                            nameWrapper.setErrorEnabled(false);
+                        } else {
+                            nameWrapper.setError("This nickname has been already taken.");
+                        }
+
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"Failed to check a existence of the nickname.");
+            }
+        });
+
+    }
+
 }

@@ -90,9 +90,10 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void friendSearch(){
-        String userEmail = editText_search.getText().toString();
+
+        String userNickname = editText_search.getText().toString();
         CollectionReference userCollection = db.collection("User");
-        Query getUserQuery = userCollection.whereEqualTo("email",userEmail);
+        Query getUserQuery = userCollection.whereEqualTo("nickname",userNickname);
 
 
         getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -142,5 +143,9 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
         MyFriendAdapter adapter = new MyFriendAdapter(getApplicationContext(),this,MyApp.getApp().getUser().getFriends());
         recyclerView.setAdapter(adapter);
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

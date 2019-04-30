@@ -81,6 +81,8 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
 
         // get friend userItem.
+
+
         String friendEmail = getIntent().getStringExtra("email");
 
         CollectionReference collection = db.collection("User");

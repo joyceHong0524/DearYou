@@ -190,9 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.button_google){
-
-        } else if(v.getId() == R.id.button_facebook){
+       if(v.getId() == R.id.button_facebook){
             LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
                     Arrays.asList("public_profile", "user_friends"));
             LoginManager.getInstance().registerCallback(mCallbackManager, //after onActivityResult 다음에 trigerred 됨
@@ -286,6 +284,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                        userItem = document.toObject(UserItem.class);
                       MyApp.getApp().setUser(userItem);
                       handler.sendEmptyMessage(0);
+                      finish();
                    }else if (docs.size()==0){
                        if(loginType==EMAIL_LOGIN) {
                            Log.d(TAG, "can't find user. docs size = " + docs.size());
@@ -369,21 +368,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
             emailWrapper.setError("Invalid email");
             flag = false;
+        } else{
+            emailWrapper.setErrorEnabled(false);
         }
 
         if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
             passwordWrapper.setError("Invalid password");
             flag = false;
+        }else{
+            passwordWrapper.setErrorEnabled(false);
         }
 
         if (TextUtils.isEmpty(email)){
             emailWrapper.setError("Shouldn't be empty");
             flag = false;
+        }else{
+            emailWrapper.setErrorEnabled(false);
         }
 
         if (TextUtils.isEmpty(password)){
             passwordWrapper.setError("Shouldn't be empty");
             flag = false;
+        }else{
+            passwordWrapper.setErrorEnabled(false);
         }
 
         return flag;
@@ -404,6 +411,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"Clicked!!!");
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent,RC_SIGN_IN);
             }

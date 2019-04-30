@@ -1,6 +1,9 @@
 package com.junga.dearyou;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.model.Document;
 import com.junga.dearyou.lib.FabLib;
 import com.junga.dearyou.lib.FontLib;
@@ -88,38 +93,36 @@ public class ProfileActivity extends AppCompatActivity {
 
         final String diaryName = editText_diaryName.getText().toString();
         final String nickname = editText_nickname.getText().toString();
-        String pastDiaryName = MyApp.getApp().getUser().getDiaryName();
-        String pastNickname = MyApp.getApp().getUser().getNickname();
 
-        if (diaryName.equals("")||nickname.equals("")){
-            Toast.makeText(this,"Please fill everything.",Toast.LENGTH_SHORT).show();
-        }else if(diaryName.equals(pastDiaryName)&&nickname.equals(pastNickname)){
-            Toast.makeText(this,"Nothing has been changed.",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            //userupdate, myuserupdate.
 
-            DocumentReference document = db.collection("User").document(MyApp.getApp().getUser().getUserId());
 
-            Map<String,Object> updates = new HashMap<>();
-            updates.put("diaryName",diaryName);
-            updates.put("nickname",nickname);
-            document.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Log.d(TAG,"successfuly updated");
-                    myAppUserUpdate(diaryName,nickname);
+        Query query = db.collection("User").whereEqualTo("nickname",nickname);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if(querySnapshot !=null) {
+                        if (!querySnapshot.isEmpty()) {
+                            Toast.makeText(ProfileActivity.this,"Username has been already taken.",Toast.LENGTH_SHORT).show();
+                        } else{
+                            if(textCheck(diaryName,nickname)) handler.sendEmptyMessage(0);
+                        }
+
+                    }
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG,"There was a problem processing update.");
-                }
-            });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"Failed to check a existence of the nickname.");
+            }
+        });
 
         }
 
-    }
+
 
     private void myAppUserUpdate(String diaryName, String nickname){
         MyApp.getApp().getUser().setDiaryName(diaryName);
@@ -127,4 +130,54 @@ public class ProfileActivity extends AppCompatActivity {
         Toast.makeText(this,"Saved :D",Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private void updateUser(final String diaryName,final String nickName){
+        DocumentReference document = db.collection("User").document(MyApp.getApp().getUser().getUserId());
+
+        Map<String,Object> updates = new HashMap<>();
+        updates.put("diaryName",diaryName);
+        updates.put("nickname",nickName);
+        document.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG,"successfuly updated");
+                myAppUserUpdate(diaryName,nickName);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"There was a problem processing update.");
+            }
+        });
+    }
+
+    private boolean textCheck(String diaryName,String nickname) {
+        String pastDiaryName = MyApp.getApp().getUser().getDiaryName();
+        String pastNickname = MyApp.getApp().getUser().getNickname();
+        if (diaryName.equals("") || nickname.equals("")) {
+            Toast.makeText(this, "Please fill everything.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (diaryName.equals(pastDiaryName) && nickname.equals(pastNickname)) {
+            Toast.makeText(this, "Nothing has been changed.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0){
+                updateUser(editText_diaryName.getText().toString(),editText_nickname.getText().toString());
+            }
+        }
+    };
+
 }

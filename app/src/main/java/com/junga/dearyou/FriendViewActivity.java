@@ -86,4 +86,9 @@ public class FriendViewActivity extends AppCompatActivity implements View.OnClic
             finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
