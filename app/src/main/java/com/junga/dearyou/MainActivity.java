@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setFont(){
         fontLib.setFont(this,"oleo_script_bold",diaryName);
-        fontLib.setFont(this,"oleo_script",nickname);
+        fontLib.setFont(this,"inconsolata",nickname);
     }
 
     @Override

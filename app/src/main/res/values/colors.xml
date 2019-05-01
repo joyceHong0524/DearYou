@@ -145,6 +145,7 @@
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
     <color name="text_black">#332F2F</color>
+    <color name="text_transparent_black">#2C000000</color>
 
     <color name="fab1">#D1ABFD</color>
     <color name="fab2">#F8C4FF</color>
