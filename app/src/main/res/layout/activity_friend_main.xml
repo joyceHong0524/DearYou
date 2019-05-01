@@ -10,13 +10,13 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:background="@drawable/background_main_info4"
+        android:background="@drawable/background_main_info7"
         >
 
         <TextView

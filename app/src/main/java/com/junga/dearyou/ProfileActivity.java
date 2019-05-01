@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.model.Document;
+import com.junga.dearyou.lib.CheckLib;
 import com.junga.dearyou.lib.FabLib;
 import com.junga.dearyou.lib.FontLib;
 
@@ -95,7 +96,6 @@ public class ProfileActivity extends AppCompatActivity {
         final String nickname = editText_nickname.getText().toString();
 
 
-
         Query query = db.collection("User").whereEqualTo("nickname",nickname);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -105,7 +105,11 @@ public class ProfileActivity extends AppCompatActivity {
                     QuerySnapshot querySnapshot = task.getResult();
                     if(querySnapshot !=null) {
                         if (!querySnapshot.isEmpty()) {
-                            Toast.makeText(ProfileActivity.this,"Username has been already taken.",Toast.LENGTH_SHORT).show();
+                            if(MyApp.getApp().getUser().getNickname().equals(nickname)){
+                                handler.sendEmptyMessage(0);
+                            }else{
+                            Toast.makeText(ProfileActivity.this,"Username has been already taken.",Toast.LENGTH_SHORT).show();}
+
                         } else{
                             if(textCheck(diaryName,nickname)) handler.sendEmptyMessage(0);
                         }
@@ -165,7 +169,11 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (diaryName.equals(pastDiaryName) && nickname.equals(pastNickname)) {
             Toast.makeText(this, "Nothing has been changed.", Toast.LENGTH_SHORT).show();
             return false;
+        } else if(!CheckLib.getInstance().isValidNickname(nickname)){
+            Toast.makeText(this, "Only english, korean, number can be used.", Toast.LENGTH_SHORT).show();
+            return false;
         }
+
         return true;
     }
 

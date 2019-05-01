@@ -146,10 +146,10 @@
     <color name="black">#000000</color>
     <color name="text_black">#332F2F</color>
 
-    <color name="fab1">#FFC107</color>
-    <color name="fab2">#0F0A03</color>
-    <color name="fab3">#FFC107</color>
-    <color name="fab4">#0F0A03</color>
-    <color name="fab5">	#FFC107</color>
+    <color name="fab1">#D1ABFD</color>
+    <color name="fab2">#F8C4FF</color>
+    <color name="fab3">#D1ABFD</color>
+    <color name="fab4">#F8C4FF</color>
+    <color name="fab5">#D1ABFD</color>
 
 </resources>
