@@ -7,9 +7,13 @@
             <!-- background (위로) -->
             <item android:bottom="3dp">
                 <shape>
-                    <corners android:radius="20dp"/>
-                    <solid android:color="@color/black" />
-
+                    <corners android:radius="10dp"/>
+                    <solid android:color="@color/mediumPurple" />
+                    <gradient
+                        android:startColor="@color/purple1"
+                        android:centerColor="@color/purple2"
+                        android:endColor="@color/purple3"
+                        android:angle="270" />
                 </shape>
             </item>
         </layer-list>

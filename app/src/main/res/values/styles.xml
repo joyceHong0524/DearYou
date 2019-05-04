@@ -17,13 +17,13 @@
     <style name="TextLabel" parent="Widget.Design.TextInputLayout">
 
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">#252020</item>
+        <item name="android:textColorHint">#FFFFFF</item>
         <item name="android:textSize">17sp</item>
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
 
-        <item name="colorAccent">#E67171</item>
-        <item name="colorControlNormal">#AC9F9D</item>
-        <item name="colorControlActivated">#8B736B</item>
+        <item name="colorAccent">#FF5722</item>
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlActivated">#FFFFFF</item>
     </style>
 </resources>
