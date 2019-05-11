@@ -186,7 +186,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         if (!isTextChecked()) {
             return;
         }
-        ;
 
         if (auth.getCurrentUser() != null) {
             //set time
@@ -376,11 +375,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private boolean isTextChecked() {
+
         if (title.getText().toString().equals("") || description.getText().toString().equals("")) {
             Toast.makeText(this, "You've missed something!", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (description.getText().toString().length() < 140) {
-            Toast.makeText(this, "Diary should be longer than 140 letters..", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

@@ -28,7 +28,7 @@ public class CheckLib {
         }else{
             return false;
         }
-    }
+}
 
     public boolean isValidNickname(String target){
         Pattern p = Pattern.compile("(^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]*$)");
