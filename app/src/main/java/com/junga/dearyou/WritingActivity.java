@@ -364,12 +364,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         if (isLocked) { //When it was locked, unlock it.
             isLocked = false;
             Glide.with(this).load(R.drawable.icon_open).into(locker);
-            Toast.makeText(this, "This diary will be shared", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.unlock_diary, Toast.LENGTH_SHORT).show();
             Log.d(TAG, "diary shared");
         } else { //When it was unlocked, lock it.
             isLocked = true;
             Glide.with(this).load(R.drawable.icon_lock).into(locker);
-            Toast.makeText(this, "We will keep this diary private", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.lock_diary, Toast.LENGTH_SHORT).show();
             Log.d(TAG, "diary locked");
         }
     }
@@ -377,7 +377,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isTextChecked() {
 
         if (title.getText().toString().equals("") || description.getText().toString().equals("")) {
-            Toast.makeText(this, "You've missed something!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.fill_everything, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

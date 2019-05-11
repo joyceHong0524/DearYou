@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             android.os.Process.killProcess(android.os.Process.myPid());
         } else {
-            Toast.makeText(this,"Press back button to kill this app ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.kill_app,Toast.LENGTH_SHORT).show();
             backbuttonPressed++;
         }
     }

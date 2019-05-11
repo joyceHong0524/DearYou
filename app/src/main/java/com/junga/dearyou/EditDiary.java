@@ -102,15 +102,15 @@ public class EditDiary extends AppCompatActivity implements View.OnClickListener
         }else if (v.getId() == R.id.textView_delete) {
             if (position != NO_POSITION) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("This diary will be deleted for good.");
-                builder.setPositiveButton("Delete",
+                builder.setMessage(R.string.delete_confirm);
+                builder.setPositiveButton(R.string.delete,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                               deleteDiary();
                             }
                         });
-                builder.setNegativeButton("No",
+                builder.setNegativeButton(R.string.no,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

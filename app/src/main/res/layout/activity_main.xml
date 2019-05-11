@@ -27,7 +27,7 @@
             android:layout_marginEnd="28dp"
             android:gravity="center"
             android:maxLines="2"
-            android:text="dfadjsfj;lakdjsf;lkaj"
+
             android:textColor="@color/white"
             android:textSize="40sp" />
 
@@ -35,7 +35,6 @@
             android:id="@+id/nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="nick name"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_below="@+id/diaryName"

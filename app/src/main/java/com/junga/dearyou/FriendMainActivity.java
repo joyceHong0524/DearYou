@@ -183,13 +183,13 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully updated");
-                            Toast.makeText(FriendMainActivity.this,"Successfully added Friend.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FriendMainActivity.this,R.string.add_friend_success,Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooopsie something went wrong.");
-                    Toast.makeText(FriendMainActivity.this,"Failed to add Friend.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendMainActivity.this,R.string.add_friend_failure,Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -209,7 +209,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooooops something went wrong" + e.toString());
-                    Toast.makeText(FriendMainActivity.this,"Failed to add Friend.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendMainActivity.this,R.string.add_friend_failure,Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -229,13 +229,13 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully updated");
-                            Toast.makeText(FriendMainActivity.this,"Successfully updated",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FriendMainActivity.this,R.string.add_friend_success,Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooopsie something went wrong.");
-                    Toast.makeText(FriendMainActivity.this,"Update failed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendMainActivity.this,R.string.add_friend_failure,Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -251,13 +251,13 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully update");
-                            Toast.makeText(FriendMainActivity.this,"Successfully updated",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FriendMainActivity.this,R.string.add_friend_success,Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooooops! something went wrong" + e.toString());
-                    Toast.makeText(FriendMainActivity.this,"Update failed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendMainActivity.this,R.string.add_friend_failure,Toast.LENGTH_SHORT).show();
                 }
             });
 

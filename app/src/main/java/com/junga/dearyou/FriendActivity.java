@@ -108,7 +108,7 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
                         friendUser = document.toObject(UserItem.class);
                         setFriendInfo(friendUser.getNickname(),friendUser.getDiaryName());
                     }else {
-                        Toast.makeText(FriendActivity.this,"Can't find email Id. Please check it again",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FriendActivity.this,R.string.invalid_email,Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

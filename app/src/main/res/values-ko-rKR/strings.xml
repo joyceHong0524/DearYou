@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="friend_add">친구 추가</string>
+    <string name="friend_delete">친구 끊기</string>
+    <string name="delete_confirm">이 다이어리는 완전히 삭제됩니다.</string>
+    <string name="delete">삭제</string>
+    <string name="no">취소</string>
+    <string name="invalid_email">이메일을 찾을 수가 없습니다.</string>
+    <string name="add_friend_success">친구 추가 성공</string>
+    <string name="add_friend_failure">친구 추가 실패</string>
+    <string name="password_error">패스워드 오류</string>
+    <string name="account_error">이 계정을 찾을 수가 없습니다.</string>
+    <string name="sign_up">회원가입은 여기를 클릭!</string>
+    <string name="kill_app">한 번더 누르면 앱이 종료 됩니다</string>
+    <string name="unlock_diary">잠금 기능 해제</string>
+    <string name="lock_diary">잠금 완료</string>
+    <string name="fill_everything">다 채워주세요!</string>
+</resources>

@@ -1,10 +1,23 @@
 <resources>
-    <string name="app_name">DearYou</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_activity_profile">ProfileActivity</string>
-    <string name="facebook_app_id">278361193069366</string>
-    <string name="fb_login_protocol_scheme">fb278361193069366</string>
-    <string name="default_web_client_id">405726014562-5koa3m4lcjs6p1kdaqomo7oklft3pvs7.apps.googleusercontent.com</string>
+    <string name="app_name" translatable="false">DearYou</string>
+    <string name="title_activity_main2" translatable="false">Main2Activity</string>
+    <string name="title_activity_profile" translatable="false">ProfileActivity</string>
+    <string name="facebook_app_id" translatable="false">278361193069366</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb278361193069366</string>
+    <string name="default_web_client_id" translatable="false">405726014562-5koa3m4lcjs6p1kdaqomo7oklft3pvs7.apps.googleusercontent.com</string>
     <string name="friend_add">Add friend</string>
     <string name="friend_delete">Delete friend</string>
+    <string name="delete_confirm">This diary will be deleted for good.</string>
+    <string name="delete">Delete</string>
+    <string name="no">No</string>
+    <string name="invalid_email">Can\'t find email Id. Please check it again</string>
+    <string name="add_friend_success">Successfully added Friend.</string>
+    <string name="add_friend_failure">Failed to add friend</string>
+    <string name="password_error">Password doesn\'t match with the account</string>
+    <string name="account_error">Can\'t find this account</string>
+    <string name="sign_up">Sign up with Email? Click Here</string>
+    <string name="kill_app">Press back button to kill this app.</string>
+    <string name="unlock_diary">This diary will be shared.</string>
+    <string name="lock_diary">No one can see this diary anymore!</string>
+    <string name="fill_everything">You\'ve missed something!</string>
 </resources>
