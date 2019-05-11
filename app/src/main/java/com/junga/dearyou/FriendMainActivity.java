@@ -10,8 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +44,7 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
     TextView friend_diaryName;
     TextView friend_nickname;
 
-    ImageView friend_status;
+    Button friend_status;
     boolean isFriend = false; //defualt is false;
 
     UserItem friendUser;
@@ -72,12 +74,14 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
         friend_diaryName = (TextView) findViewById(R.id.friend_diaryName);
         friend_nickname = (TextView) findViewById(R.id.friend_nickname);
 
-        friend_status = (ImageView) findViewById(R.id.friend_status);
+        friend_status = (Button) findViewById(R.id.friend_status);
+
 
         friend_status.setOnClickListener(this);
 
         fontLib.setFont(this,"oleo_script_bold",friend_diaryName);
         fontLib.setFont(this,"oleo_script",friend_nickname);
+        fontLib.setFont(this,"oleo_script",friend_status);
 
 
         // get friend userItem.
@@ -126,9 +130,11 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
 
         Log.d(TAG, "Is this my friend? " + isFriend);
         if (isFriend) {
-            Glide.with(this).load(R.drawable.friend_checked).into(friend_status);
+              friend_status.setText(R.string.friend_delete);
+//            Glide.with(this).load(R.drawable.friend_checked).into(friend_status);
         } else {
-            Glide.with(this).load(R.drawable.friend_add).into(friend_status);
+            friend_status.setText(R.string.friend_add);
+//            Glide.with(this).load(R.drawable.friend_add).into(friend_status);
         }
 
         //2. Set Diaryname and set friend name;
@@ -177,11 +183,13 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully updated");
+                            Toast.makeText(FriendMainActivity.this,"Successfully added Friend.",Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooopsie something went wrong.");
+                    Toast.makeText(FriendMainActivity.this,"Failed to add Friend.",Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -201,13 +209,14 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooooops something went wrong" + e.toString());
+                    Toast.makeText(FriendMainActivity.this,"Failed to add Friend.",Toast.LENGTH_SHORT).show();
                 }
             });
 
             //update info ui
 
             isFriend = true;
-            Glide.with(this).load(R.drawable.friend_checked).into(friend_status);
+           friend_status.setText(R.string.friend_delete);
         } else {
 
             ArrayList<String> newFriends = MyApp.getApp().getUser().getFriends();
@@ -220,11 +229,14 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully updated");
+                            Toast.makeText(FriendMainActivity.this,"Successfully updated",Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooopsie something went wrong.");
+                    Toast.makeText(FriendMainActivity.this,"Update failed",Toast.LENGTH_SHORT).show();
+
                 }
             });
 
@@ -239,16 +251,18 @@ public class FriendMainActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "successfully update");
+                            Toast.makeText(FriendMainActivity.this,"Successfully updated",Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "ooooops! something went wrong" + e.toString());
+                    Toast.makeText(FriendMainActivity.this,"Update failed",Toast.LENGTH_SHORT).show();
                 }
             });
 
             isFriend = false;
-            Glide.with(this).load(R.drawable.friend_add).into(friend_status);
+            friend_status.setText(R.string.friend_add);
         }
     }
 

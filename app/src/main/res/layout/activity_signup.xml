@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_login2"
+    android:background="@drawable/background_login"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -25,11 +25,11 @@
 
 
             <ImageView
-                android:layout_width="180dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="30dp"
-                android:src="@drawable/logo_dearyou3"
+                android:src="@drawable/logo4"
                 />
 
 
@@ -51,7 +51,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:theme="@style/TextLabel">
+                android:theme="@style/TextLabel2"
+                android:background="@drawable/ed_bg"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                >
 
                 <EditText
                     android:id="@+id/input_name"
@@ -59,7 +63,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLength="15"
-                    android:hint="Name"/>
+                    android:hint="Name"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -68,7 +73,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:theme="@style/TextLabel">
+                android:theme="@style/TextLabel2"
+                android:background="@drawable/ed_bg"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp">
 
                 <EditText
                     android:id="@+id/input_email"
@@ -84,7 +92,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:theme="@style/TextLabel">
+                android:background="@drawable/ed_bg"
+                android:theme="@style/TextLabel2"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp">
 
                 <EditText
                     android:id="@+id/input_password"
@@ -105,7 +116,7 @@
                 android:layout_marginRight="10dp"
                 android:textColor="@color/white"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_style1"/>
+                android:background="@drawable/ed_bg"/>
 
             <TextView
                 android:id="@+id/textView_login"

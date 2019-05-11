@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/textInputLayout_nickname"
             android:layout_marginTop="20dp"
-            android:theme="@style/TextLabel">
+            >
 
             <EditText
 
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_centerInParent="true"
-            android:theme="@style/TextLabel">
+            >
 
             <EditText
 
