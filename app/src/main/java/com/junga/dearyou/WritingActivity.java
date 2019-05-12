@@ -386,7 +386,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        fab.closeFABMenu();
     }
 }
 
