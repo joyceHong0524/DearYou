@@ -6,3 +6,6 @@
 - Used firebase authentication for social login(Google,Facebook) and email sign up
 - Used firestore for saving diary data
 
+![image](./long.png)
+![image2](./main.png)
+![image3](./login.png)
