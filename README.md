@@ -1,7 +1,9 @@
 # DearYou - Social diary app with extraordinary design
-
+<br>
+<br>
 <img src="./long.png" width="700" height="356" title="Long">
-
+<br>
+<br>
 DearYou is a diary app with the most unique and adorable design that you can find in Google Play. Add your close friends and share your day with them. DearYou has a locker where you can share what you want to share. 
 <br> 
 <br>
