@@ -34,7 +34,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     FontLib fontLib = new FontLib();
 
 
-    public MyDiaryAdapter(Activity mActivity,Context context, ArrayList<DiaryItem> diaryList,int mode) {
+    public MyDiaryAdapter(Activity mActivity, Context context, ArrayList<DiaryItem> diaryList, int mode) {
         this.context = context;
         this.diaryList = diaryList;
         adapter = this;
@@ -46,34 +46,35 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_diary,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_diary, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-            //diaryList.size()-1-position을 하는 이유눈 역순으로 표시해주기 위해서.
-            final DiaryItem diary = diaryList.get(diaryList.size()-1-position);
-            holder.title.setText(diary.title);
-            holder.content.setText(diary.content);
+        //diaryList.size()-1-position을 하는 이유눈 역순으로 표시해주기 위해서.
+        final DiaryItem diary = diaryList.get(diaryList.size() - 1 - position);
+        holder.title.setText(diary.title);
+        holder.content.setText(diary.content);
 
-            holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
+        holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
 
-            if (mode == MY_MAIN){
+        if (mode == MY_MAIN) {
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //pass current diaryItem
-                startEditActivity(diaryList.size()-1-position,diary.getTitle(),diary.getContent(),diary.isLocked());
+                    startEditActivity(diaryList.size() - 1 - position, diary.getTitle(), diary.getContent(), diary.isLocked());
                 }
-            });} else if (mode == FRIEND_MAIN){
-                holder.myView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startFriendViwActivity(diary.getDiaryId());
-                    }
-                });
-            }
+            });
+        } else if (mode == FRIEND_MAIN) {
+            holder.myView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startFriendViwActivity(diary.getDiaryId());
+                }
+            });
+        }
     }
 
     @Override
@@ -81,7 +82,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         return (diaryList != null ? diaryList.size() : 0);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
         TextView date;
@@ -91,35 +92,35 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             myView = itemView;
-            title = (TextView)  itemView.findViewById(R.id.textView_title);
+            title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.textView_date);
             content = (TextView) itemView.findViewById(R.id.textView_content);
-            fontLib.setFont(mActivity,"inconsolata",content);
-            fontLib.setFont(mActivity,"oleo_script",title);
-            fontLib.setFont(mActivity,"inconsolata",date);
+            fontLib.setFont(mActivity, "inconsolata", content);
+            fontLib.setFont(mActivity, "oleo_script", title);
+            fontLib.setFont(mActivity, "inconsolata", date);
         }
     }
 
     //custom methods.
 
-    public void insertItem (DiaryItem diaryItem, int insertIndex){
-        diaryList.add(insertIndex,diaryItem);
+    public void insertItem(DiaryItem diaryItem, int insertIndex) {
+        diaryList.add(insertIndex, diaryItem);
         adapter.notifyItemInserted(insertIndex);
     }
 
-    public void startEditActivity(int position,String title, String content,boolean islocked){
+    public void startEditActivity(int position, String title, String content, boolean islocked) {
 
         Intent intent = new Intent(context, EditDiary.class);
-        intent.putExtra("position",position);
-        intent.putExtra("title",title);
-        intent.putExtra("content",content);
-        intent.putExtra("isLocked",islocked);
+        intent.putExtra("position", position);
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+        intent.putExtra("isLocked", islocked);
         mActivity.startActivity(intent);
     }
 
-    public void startFriendViwActivity(String diaryId){
+    public void startFriendViwActivity(String diaryId) {
         Intent intent = new Intent(context, FriendViewActivity.class);
-        intent.putExtra("diaryId",diaryId);
+        intent.putExtra("diaryId", diaryId);
         mActivity.startActivity(intent);
     }
 

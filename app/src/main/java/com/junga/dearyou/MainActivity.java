@@ -1,7 +1,6 @@
 package com.junga.dearyou;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -30,13 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     TextView diaryName;
     TextView nickname;
-    private int backbuttonPressed = 0;
-
     boolean isMenuOpen = false;
     FabLib fab;
-
     FontLib fontLib = new FontLib();
-
+    private int backbuttonPressed = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,19 +91,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void setFont(){
-        fontLib.setFont(this,"oleo_script_bold",diaryName);
-        fontLib.setFont(this,"inconsolata",nickname);
+    private void setFont() {
+        fontLib.setFont(this, "oleo_script_bold", diaryName);
+        fontLib.setFont(this, "inconsolata", nickname);
     }
 
     @Override
-    public void onBackPressed(){
-        if (backbuttonPressed>=1){
+    public void onBackPressed() {
+        if (backbuttonPressed >= 1) {
             moveTaskToBack(true);
             finish();
-            android.os.Process.killProcess(android.os.Process.myPid());
         } else {
-            Toast.makeText(this,R.string.kill_app,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.kill_app, Toast.LENGTH_SHORT).show();
             backbuttonPressed++;
         }
     }

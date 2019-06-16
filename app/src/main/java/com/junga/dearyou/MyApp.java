@@ -27,7 +27,7 @@ public class MyApp extends Application {
     private UserItem user;
 
     public UserItem getUser() {
-        if (user == null){
+        if (user == null) {
             user = new UserItem();
         }
         return user;

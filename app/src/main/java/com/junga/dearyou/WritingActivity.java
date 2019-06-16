@@ -87,9 +87,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         description.setOnClickListener(this);
 
 
-        fontLib.setFont(this,"oleo_script_bold",title);
-        fontLib.setFont(this,"inconsolata",description);
-        fontLib.setFont(this,"inconsolata",textCount);
+        fontLib.setFont(this, "oleo_script_bold", title);
+        fontLib.setFont(this, "inconsolata", description);
+        fontLib.setFont(this, "inconsolata", textCount);
 
         description.addTextChangedListener(new TextWatcher() {
             @Override
@@ -110,7 +110,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
 
 
         mode = getIntent().getIntExtra("mode", 100);
@@ -168,9 +167,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             }
         } else if (v.getId() == R.id.icon_locker) {
             lockerChanged(); //Handler로 관리한다.
-        } else if (v.getId() == R.id.editText_title){
+        } else if (v.getId() == R.id.editText_title) {
             title.requestFocus();
-        } else if (v.getId() == R.id.editText_description){
+        } else if (v.getId() == R.id.editText_description) {
             description.requestFocus();
         }
     }

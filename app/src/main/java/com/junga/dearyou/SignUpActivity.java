@@ -2,6 +2,7 @@ package com.junga.dearyou;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -46,16 +47,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private String email;
     private String password;
 
-    EditText input_name;
-    EditText input_email;
-    EditText input_password;
+    private EditText input_name;
+    private EditText input_email;
+    private EditText input_password;
 
-    TextInputLayout nameWrapper;
-    TextInputLayout emailWrapper;
-    TextInputLayout passwordWrapper;
+    private TextInputLayout nameWrapper;
+    private TextInputLayout emailWrapper;
+    private TextInputLayout passwordWrapper;
 
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    //SharedPreference
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +69,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Button button_signup;
         TextView textView_login;
 
-        button_signup = (Button) findViewById(R.id.button_signup);
-        textView_login = (TextView) findViewById(R.id.textView_login);
+        button_signup = findViewById(R.id.button_signup);
+        textView_login = findViewById(R.id.textView_login);
 
         button_signup.setOnClickListener(this);
         textView_login.setOnClickListener(this);
 
 
-        input_name = (EditText) findViewById(R.id.input_name);
-        input_email = (EditText) findViewById(R.id.input_email);
-        input_password = (EditText) findViewById(R.id.input_password);
-        nameWrapper = (TextInputLayout) findViewById(R.id.name_wrapper);
-        emailWrapper = (TextInputLayout) findViewById(R.id.email_wrapper);
-        passwordWrapper = (TextInputLayout) findViewById(R.id.password_wrapper);
+        input_name = findViewById(R.id.input_name);
+        input_email = findViewById(R.id.input_email);
+        input_password = findViewById(R.id.input_password);
+        nameWrapper = findViewById(R.id.name_wrapper);
+        emailWrapper = findViewById(R.id.email_wrapper);
+        passwordWrapper = findViewById(R.id.password_wrapper);
 
     }
 
@@ -124,6 +128,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             Log.d(TAG, "createUserWithEmail:success");
                             updateDatabase(email); //Auth와 UserDatabase는 email로 연결.
                             progressDialog.dismiss();
+                            setEmailSharedPreference(email);
                             toMainActivity();
 
                         }
@@ -153,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public void updateDatabase(String userEmail) {
+    private void updateDatabase(String userEmail) {
         String name = input_name.getText().toString();
 
         UserItem data = new UserItem("", userEmail, name, null, "Set your Diary Title", new ArrayList<DiaryItem>(), new ArrayList<String>());
@@ -227,7 +232,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         MyApp.getApp().setUser(newUser); //이제 전체에서 쓸 수가 있다.
     }
 
-    public void toMainActivity() {
+    private void toMainActivity() {
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }
@@ -237,14 +242,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        if(!((Boolean) CheckLib.getInstance().isValidEmail(email))){
+        if(!CheckLib.getInstance().isValidEmail(email)){
             emailWrapper.setError("Invalid email");
             flag = false;
         }else{
             emailWrapper.setErrorEnabled(false);
         }
 
-        if (!((Boolean) CheckLib.getInstance().isValidPassword(password))){
+        if (!CheckLib.getInstance().isValidPassword(password)){
             passwordWrapper.setError("Only a-z,A-Z,&*%.! is allowed. More than 6 characters.");
             flag = false;
         } else{
@@ -272,7 +277,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             nameWrapper.setErrorEnabled(false);
         }
 
-        if(!(Boolean) CheckLib.getInstance().isValidNickname(name)){
+        if(!CheckLib.getInstance().isValidNickname(name)){
             nameWrapper.setError("Invalid name. Only letters and numbers.");
             flag = false;
         } else{
@@ -317,6 +322,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+    }
+
+
+    private void setEmailSharedPreference(String email){
+        pref = getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("email",email);
+        editor.commit();
+
+        Log.d(TAG, "setEmailSharedPreference: Share preference email saved.");
     }
 
 }

@@ -2,6 +2,7 @@ package com.junga.dearyou;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -44,6 +45,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     FabLib fab;
     FontLib fontLib = new FontLib();
+
+    SharedPreferences pref;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -67,11 +71,13 @@ public class ProfileActivity extends AppCompatActivity {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    auth.signOut();
+                auth.signOut();
                 LoginManager.getInstance().logOut();
-                    Toast.makeText(ProfileActivity.this,"Bye..!",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
-                    startActivity(intent);
+                Toast.makeText(ProfileActivity.this, "Bye..!", Toast.LENGTH_SHORT).show();
+                //SharePreference에 저장된 값 날려주기.
+                removeSharedPreferenceEmail();
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -85,33 +91,34 @@ public class ProfileActivity extends AppCompatActivity {
         fab = new FabLib(ProfileActivity.this);
         fab.setFabMenu();
 
-        fontLib.setFont(this,"oleo_script",editText_nickname);
-        fontLib.setFont(this,"oleo_script",editText_diaryName);
-        fontLib.setFont(this,"oleo_script_bold",signOut);
+        fontLib.setFont(this, "oleo_script", editText_nickname);
+        fontLib.setFont(this, "oleo_script", editText_diaryName);
+        fontLib.setFont(this, "oleo_script_bold", signOut);
     }
 
-    private void saveProfile(){
+    private void saveProfile() {
 
         final String diaryName = editText_diaryName.getText().toString();
         final String nickname = editText_nickname.getText().toString();
 
 
-        Query query = db.collection("User").whereEqualTo("nickname",nickname);
+        Query query = db.collection("User").whereEqualTo("nickname", nickname);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
-                    if(querySnapshot !=null) {
+                    if (querySnapshot != null) {
                         if (!querySnapshot.isEmpty()) {
-                            if(MyApp.getApp().getUser().getNickname().equals(nickname)){
+                            if (MyApp.getApp().getUser().getNickname().equals(nickname)) {
                                 handler.sendEmptyMessage(0);
-                            }else{
-                            Toast.makeText(ProfileActivity.this,"Username has been already taken.",Toast.LENGTH_SHORT).show();}
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Username has been already taken.", Toast.LENGTH_SHORT).show();
+                            }
 
-                        } else{
-                            if(textCheck(diaryName,nickname)) handler.sendEmptyMessage(0);
+                        } else {
+                            if (textCheck(diaryName, nickname)) handler.sendEmptyMessage(0);
                         }
 
                     }
@@ -120,18 +127,17 @@ public class ProfileActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"Failed to check a existence of the nickname.");
+                Log.d(TAG, "Failed to check a existence of the nickname.");
             }
         });
 
-        }
+    }
 
 
-
-    private void myAppUserUpdate(String diaryName, String nickname){
+    private void myAppUserUpdate(String diaryName, String nickname) {
         MyApp.getApp().getUser().setDiaryName(diaryName);
         MyApp.getApp().getUser().setNickname(nickname);
-        Toast.makeText(this,"Saved :D",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Saved :D", Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -140,27 +146,27 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updateUser(final String diaryName,final String nickName){
+    private void updateUser(final String diaryName, final String nickName) {
         DocumentReference document = db.collection("User").document(MyApp.getApp().getUser().getUserId());
 
-        Map<String,Object> updates = new HashMap<>();
-        updates.put("diaryName",diaryName);
-        updates.put("nickname",nickName);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("diaryName", diaryName);
+        updates.put("nickname", nickName);
         document.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.d(TAG,"successfuly updated");
-                myAppUserUpdate(diaryName,nickName);
+                Log.d(TAG, "successfuly updated");
+                myAppUserUpdate(diaryName, nickName);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"There was a problem processing update.");
+                Log.d(TAG, "There was a problem processing update.");
             }
         });
     }
 
-    private boolean textCheck(String diaryName,String nickname) {
+    private boolean textCheck(String diaryName, String nickname) {
         String pastDiaryName = MyApp.getApp().getUser().getDiaryName();
         String pastNickname = MyApp.getApp().getUser().getNickname();
         if (diaryName.equals("") || nickname.equals("")) {
@@ -169,7 +175,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (diaryName.equals(pastDiaryName) && nickname.equals(pastNickname)) {
             Toast.makeText(this, "Nothing has been changed.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if(!CheckLib.getInstance().isValidNickname(nickname)){
+        } else if (!CheckLib.getInstance().isValidNickname(nickname)) {
             Toast.makeText(this, "Only english, korean, number can be used.", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -178,14 +184,22 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 0){
-                updateUser(editText_diaryName.getText().toString(),editText_nickname.getText().toString());
+            if (msg.what == 0) {
+                updateUser(editText_diaryName.getText().toString(), editText_nickname.getText().toString());
             }
         }
     };
+
+    private void removeSharedPreferenceEmail(){
+        pref = getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        Log.d(TAG, "removeSharedPreferenceEmail: Remove email data");
+        editor.remove("email");
+        editor.commit();
+    }
 
 }

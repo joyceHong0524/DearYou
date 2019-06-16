@@ -1,29 +1,19 @@
 package com.junga.dearyou;
 
 
-
-
-import com.google.firebase.firestore.ServerTimestamp;
-
-import java.util.Date;
-import java.sql.Time;
-
-import java.sql.Timestamp;
-import java.util.Map;
-
 public class DiaryItem {
 
     private final String TAG = getClass().getSimpleName();
 
     String authorId;
-//    Date date;
+    //    Date date;
     String content;
     boolean isLocked;
     String title;
     String diaryId;
     Long time;
 
-    public DiaryItem(String diaryId, String authorId, String title, String content, boolean isLocked,Long time) {
+    public DiaryItem(String diaryId, String authorId, String title, String content, boolean isLocked, Long time) {
         this.diaryId = diaryId;
         this.authorId = authorId;
         this.title = title;
@@ -40,7 +30,8 @@ public class DiaryItem {
         this.time = time;
     }
 
-    public DiaryItem() {}
+    public DiaryItem() {
+    }
 
     public String getAuthorId() {
         return authorId;
@@ -75,8 +66,12 @@ public class DiaryItem {
         isLocked = locked;
     }
 
-    public void setDiaryId(String diaryId){ this.diaryId = diaryId;}
+    public void setDiaryId(String diaryId) {
+        this.diaryId = diaryId;
+    }
 
-    public String getDiaryId() {return diaryId;}
+    public String getDiaryId() {
+        return diaryId;
+    }
 
 }

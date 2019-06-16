@@ -50,7 +50,7 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_friend,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_friend, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -59,7 +59,7 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
         String friendEmail = friendList.get(position);
         //각각의 정보를 가져와야한다. user로
 
-        Query query = db.collection("User").whereEqualTo("email",friendEmail);
+        Query query = db.collection("User").whereEqualTo("email", friendEmail);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -81,10 +81,9 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"Failed to retrieve info of friend");
+                Log.d(TAG, "Failed to retrieve info of friend");
             }
         });
-
 
 
     }
@@ -104,18 +103,18 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyView
             super(itemView);
             this.itemView = itemView;
             friend_nickname = (TextView) itemView.findViewById(R.id.friend_nickname);
-            friend_diaryName= (TextView) itemView.findViewById(R.id.friend_diaryName);
-            last_update =  (TextView) itemView.findViewById(R.id.last_update);
+            friend_diaryName = (TextView) itemView.findViewById(R.id.friend_diaryName);
+            last_update = (TextView) itemView.findViewById(R.id.last_update);
 
-            fontLib.setFont(mActivity,"inconsolata_bold",friend_nickname);
-            fontLib.setFont(mActivity,"inconsolata",friend_diaryName);
+            fontLib.setFont(mActivity, "inconsolata_bold", friend_nickname);
+            fontLib.setFont(mActivity, "inconsolata", friend_diaryName);
 
         }
     }
 
-    private void visitFriend(String friendEmail){
-        Intent intent = new Intent(context,FriendMainActivity.class);
-        intent.putExtra("email",friendEmail);
+    private void visitFriend(String friendEmail) {
+        Intent intent = new Intent(context, FriendMainActivity.class);
+        intent.putExtra("email", friendEmail);
         mActivity.startActivity(intent);
     }
 }

@@ -46,24 +46,24 @@ public class FriendViewActivity extends AppCompatActivity implements View.OnClic
 
         back.setOnClickListener(this);
 
-        fontLib.setFont(this,"oleo_script_bold",title);
-        fontLib.setFont(this,"inconsolata",content);
-        fontLib.setFont(this,"inconsolata",back);
+        fontLib.setFont(this, "oleo_script_bold", title);
+        fontLib.setFont(this, "inconsolata", content);
+        fontLib.setFont(this, "inconsolata", back);
 
         setDiary();
     }
 
 
-    private void setDiary(){
+    private void setDiary() {
 
         CollectionReference col = db.collection("Diary");
-        Query getDiary = col.whereEqualTo("diaryId",diaryId);
+        Query getDiary = col.whereEqualTo("diaryId", diaryId);
 
         getDiary.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 QuerySnapshot q = task.getResult();
-                if(task.getResult()!=null) {
+                if (task.getResult() != null) {
                     List<DocumentSnapshot> docs = q.getDocuments();
                     DocumentSnapshot doc = docs.get(0);
                     DiaryItem item = doc.toObject(DiaryItem.class);
@@ -75,14 +75,14 @@ public class FriendViewActivity extends AppCompatActivity implements View.OnClic
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"Something went wrong");
+                Log.d(TAG, "Something went wrong");
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.textView_back){
+        if (v.getId() == R.id.textView_back) {
             finish();
         }
     }

@@ -53,22 +53,22 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
 
-       editText_search = (EditText) findViewById(R.id.editText_search);
-       textView_search = (TextView) findViewById(R.id.textView_search);
-       searchResult = findViewById(R.id.search_result);
+        editText_search = (EditText) findViewById(R.id.editText_search);
+        textView_search = (TextView) findViewById(R.id.textView_search);
+        searchResult = findViewById(R.id.search_result);
 
-       friendNickname = (TextView) findViewById(R.id.friendNickname);
-       friendDiaryname = (TextView) findViewById(R.id.friend_diaryName);
-       friendVisit = (TextView) findViewById(R.id.visit);
+        friendNickname = (TextView) findViewById(R.id.friendNickname);
+        friendDiaryname = (TextView) findViewById(R.id.friend_diaryName);
+        friendVisit = (TextView) findViewById(R.id.visit);
 
-       recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-       textView_search.setOnClickListener(this);
-       friendVisit.setOnClickListener(this);
+        textView_search.setOnClickListener(this);
+        friendVisit.setOnClickListener(this);
 
-       fontLib.setFont(this,"oleo_script_bold",editText_search);
+        fontLib.setFont(this, "oleo_script_bold", editText_search);
 
-       setRecyclerView();
+        setRecyclerView();
         fab = new FabLib(FriendActivity.this);
         fab.setFabMenu();
     }
@@ -82,33 +82,33 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.textView_search){
+        if (v.getId() == R.id.textView_search) {
             friendSearch();
-        } else if(v.getId() == R.id.visit){
+        } else if (v.getId() == R.id.visit) {
             visitFriend();
         }
     }
 
-    private void friendSearch(){
+    private void friendSearch() {
 
         String userNickname = editText_search.getText().toString();
         CollectionReference userCollection = db.collection("User");
-        Query getUserQuery = userCollection.whereEqualTo("nickname",userNickname);
+        Query getUserQuery = userCollection.whereEqualTo("nickname", userNickname);
 
 
         getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     List<DocumentSnapshot> docs = querySnapshot.getDocuments();
-                    if(docs.size()==1) {
-                        Log.d(TAG,"Friend Email founded");
+                    if (docs.size() == 1) {
+                        Log.d(TAG, "Friend Email founded");
                         DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
                         friendUser = document.toObject(UserItem.class);
-                        setFriendInfo(friendUser.getNickname(),friendUser.getDiaryName());
-                    }else {
-                        Toast.makeText(FriendActivity.this,R.string.invalid_email,Toast.LENGTH_SHORT).show();
+                        setFriendInfo(friendUser.getNickname(), friendUser.getDiaryName());
+                    } else {
+                        Toast.makeText(FriendActivity.this, R.string.invalid_email, Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -116,34 +116,35 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,"Something went wrong"+e);
+                Log.d(TAG, "Something went wrong" + e);
             }
         });
 
     }
 
-    private void visitFriend(){
+    private void visitFriend() {
         // 1. first pass the email of friend.
-        Intent intent = new Intent(FriendActivity.this,FriendMainActivity.class);
-        intent.putExtra("email",friendUser.getEmail());
+        Intent intent = new Intent(FriendActivity.this, FriendMainActivity.class);
+        intent.putExtra("email", friendUser.getEmail());
         startActivity(intent);
         searchResult.setVisibility(View.GONE);
     }
 
-    private void setFriendInfo(String friendName, String diaryname){
+    private void setFriendInfo(String friendName, String diaryname) {
         friendNickname.setText(friendName);
         friendDiaryname.setText(diaryname);
         searchResult.setVisibility(View.VISIBLE);
 
     }
 
-    private void setRecyclerView(){
+    private void setRecyclerView() {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        MyFriendAdapter adapter = new MyFriendAdapter(getApplicationContext(),this,MyApp.getApp().getUser().getFriends());
+        MyFriendAdapter adapter = new MyFriendAdapter(getApplicationContext(), this, MyApp.getApp().getUser().getFriends());
         recyclerView.setAdapter(adapter);
     }
+
     @Override
     public void onBackPressed() {
         finish();
