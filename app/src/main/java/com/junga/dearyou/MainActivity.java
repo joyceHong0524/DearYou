@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setFont() {
-        fontLib.setFont(this, "oleo_script_bold", diaryName);
-        fontLib.setFont(this, "inconsolata", nickname);
+        fontLib.setFont(this, "roboto_thin", diaryName);
+        fontLib.setFont(this, "roboto_regular", nickname);
     }
 
     @Override
@@ -106,4 +106,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             backbuttonPressed++;
         }
     }
+
 }

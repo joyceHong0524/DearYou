@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
 import com.junga.dearyou.lib.FontLib;
 import com.junga.dearyou.lib.TimeLib;
@@ -32,6 +35,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     int mode;
 
     FontLib fontLib = new FontLib();
+    TimeLib timeLib = TimeLib.Companion.getInstance();
 
 
     public MyDiaryAdapter(Activity mActivity, Context context, ArrayList<DiaryItem> diaryList, int mode) {
@@ -57,8 +61,16 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         holder.title.setText(diary.title);
         holder.content.setText(diary.content);
 
-//        holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
-        holder.date.setText("26\nMon");
+        holder.date.setText(timeLib.SimpleDate(diary.time)); //미국식 표
+        if (timeLib.isWeekend(diary.time)){
+            //if it is weekend, change the color of the circle red
+            Glide.with(context).load(R.drawable.weekend_oval).into(holder.circle);
+        }else {
+            //If it is weekday, change the color of the circle grey
+            Glide.with(context).load(R.drawable.weekday_oval).into(holder.circle);
+        }
+
+//        holder.date.setText("26\nMon");
         if (mode == MY_MAIN) {
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,6 +100,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         TextView date;
         TextView content;
         View myView;
+        ImageView circle;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -95,6 +108,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
             title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.textView_date);
             content = (TextView) itemView.findViewById(R.id.textView_content);
+            circle = (ImageView) itemView.findViewById(R.id.circle);
             fontLib.setFont(mActivity, "roboto_thin", content);
             fontLib.setFont(mActivity, "roboto_medium", title);
             fontLib.setFont(mActivity, "roboto_bold", date);
