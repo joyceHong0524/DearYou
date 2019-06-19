@@ -2,34 +2,35 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="176dp">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_medium"
+        android:layout_marginBottom="8dp"
         android:text="Said my boyfriend to have time"
         android:textColor="@color/black"
         android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_content"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        tools:layout_editor_absoluteY="29dp" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
-        android:fontFamily="@font/roboto_thin"
         android:maxLines="3"
         android:text="Well.. I do love him and have a really deep feeling towards him. But somehow I felt uneasiness one day, when i couldn't reach him. I think It is quite heart "
         android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        tools:layout_editor_absoluteY="66dp" />
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
@@ -51,15 +52,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textView_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
-        android:
         android:text="26
 MON"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <View
+        android:layout_width="250dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

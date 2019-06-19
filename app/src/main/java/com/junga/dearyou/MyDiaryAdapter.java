@@ -46,7 +46,7 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_diary, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_diary_new, parent, false);
         return new ViewHolder(view);
     }
 
@@ -57,8 +57,8 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
         holder.title.setText(diary.title);
         holder.content.setText(diary.content);
 
-        holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
-
+//        holder.date.setText(TimeLib.getInstance().getStringDate(diary.time)); //미국식 표
+        holder.date.setText("26\nMon");
         if (mode == MY_MAIN) {
             holder.myView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,9 +95,9 @@ public class MyDiaryAdapter extends RecyclerView.Adapter<MyDiaryAdapter.ViewHold
             title = (TextView) itemView.findViewById(R.id.textView_title);
             date = (TextView) itemView.findViewById(R.id.textView_date);
             content = (TextView) itemView.findViewById(R.id.textView_content);
-            fontLib.setFont(mActivity, "inconsolata", content);
-            fontLib.setFont(mActivity, "oleo_script", title);
-            fontLib.setFont(mActivity, "inconsolata", date);
+            fontLib.setFont(mActivity, "roboto_thin", content);
+            fontLib.setFont(mActivity, "roboto_medium", title);
+            fontLib.setFont(mActivity, "roboto_bold", date);
         }
     }
 

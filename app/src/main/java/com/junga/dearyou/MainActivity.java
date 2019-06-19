@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_new_main);
 
         //Initialize all views.
         View info = (View) findViewById(R.id.info);
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setFont();
         setInfoView();
         setRecyclerView();
-        fab = new FabLib(MainActivity.this);
-        fab.setFabMenu();
+//        fab = new FabLib(MainActivity.this);
+//        fab.setFabMenu();
     }
 
     //When user comes back to main activity, reload recyclerView.
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Writing Activity에서 다시 돌아왔을 때 RecyclerView를 다시 로딩한다.
         setRecyclerView();
         setInfoView();
-        fab.closeFABMenu();
+//        fab.closeFABMenu();
     }
 
     @Override
