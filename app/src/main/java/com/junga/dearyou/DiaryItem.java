@@ -13,6 +13,7 @@ public class DiaryItem {
     String diaryId;
     Long time;
 
+
     public DiaryItem(String diaryId, String authorId, String title, String content, boolean isLocked, Long time) {
         this.diaryId = diaryId;
         this.authorId = authorId;

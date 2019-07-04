@@ -117,48 +117,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         checkAutoLogin();
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if (user != null) {
-                    //User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in" + user.getUid());
-                    String email = user.getEmail();
-                    CollectionReference userCollection = db.collection("User");
-                    Query getUserQuery = userCollection.whereEqualTo("email", email);
-
-                    getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                QuerySnapshot querySnapshot = task.getResult();
-                                assert querySnapshot != null;
-                                List<DocumentSnapshot> docs = querySnapshot.getDocuments();
-                                if (docs.size() == 1) {
-                                    DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
-                                    userItem = document.toObject(UserItem.class);
-                                    MyApp.getApp().setUser(userItem);
-                                    handler.sendEmptyMessage(0);
-                                }
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "Something went wrong" + e);
-                        }
-                    });
-
-
-                } else {
-                    //User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//
+//                if (user != null) {
+//
+//                    if(!user.getEmail().equals("")) {
+//                        //User is signed in
+//                        Log.d(TAG, "onAuthStateChanged:signed_in" + user.getUid());
+//                        Toast.makeText(LoginActivity.this, "Firebase user was logged in", Toast.LENGTH_SHORT).show();
+//                        String email = user.getEmail();
+//                        CollectionReference userCollection = db.collection("User");
+//                        Query getUserQuery = userCollection.whereEqualTo("email", email);
+//
+//                        getUserQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    QuerySnapshot querySnapshot = task.getResult();
+//                                    assert querySnapshot != null;
+//                                    List<DocumentSnapshot> docs = querySnapshot.getDocuments();
+//                                    if (docs.size() == 1) {
+//                                        DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
+//                                        userItem = document.toObject(UserItem.class);
+//                                        MyApp.getApp().setUser(userItem);
+//                                        handler.sendEmptyMessage(0);
+//                                    }
+//                                }
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.d(TAG, "Something went wrong" + e);
+//                            }
+//                        });
+//
+//
+//                    }} else {
+//                    //User is signed out
+//                    Log.d(TAG, "onAuthStateChanged:signed_out");
+//                }
+//            }
+//        };
         userItem = MyApp.getApp().getUser(); //새로운 useritem을 가져온다.
 
 
@@ -168,15 +171,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        mAuth.addAuthStateListener(mAuthStateListener);
+//        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mAuthStateListener != null) {
-            mAuth.removeAuthStateListener(mAuthStateListener);
-        }
+//        if (mAuthStateListener != null) {
+////            mAuth.removeAuthStateListener(mAuthStateListener);
+//        }
     }
 
     @Override
@@ -484,7 +487,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         pref = getSharedPreferences("user", MODE_PRIVATE);
         String prefEmail = pref.getString("email", null);
 
-        if (prefEmail != null) {
+        if (prefEmail != null && !prefEmail.equals("") ) {
             //User is signed in
             Log.d(TAG, "checkAutoLogin: Auto Login Started");
             String email = prefEmail;
@@ -503,6 +506,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             userItem = document.toObject(UserItem.class);
                             MyApp.getApp().setUser(userItem);
                             handler.sendEmptyMessage(0);
+                            Log.d(TAG,"Auto Login Completed");
                         }
                     }
                 }
@@ -514,7 +518,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
 
         } else {
-
+            Log.d("TAG","Can't auto login since there is no email saved.");
         }
 
     }
