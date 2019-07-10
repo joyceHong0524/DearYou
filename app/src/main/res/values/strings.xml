@@ -5,6 +5,7 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb278361193069366</string>
     <string name="friend_add">Add friend</string>
     <string name="friend_delete">Delete friend</string>
+    <string name="web_client_id" translatable="false">405726014562-5koa3m4lcjs6p1kdaqomo7oklft3pvs7.apps.googleusercontent.com</string>
     <string name="delete_confirm">This diary will be deleted for good.</string>
     <string name="delete">Delete</string>
     <string name="no">No</string>

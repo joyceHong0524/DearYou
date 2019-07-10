@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                }
 //            }
 //        };
-        userItem = MyApp.getApp().getUser(); //새로운 useritem을 가져온다.
+//        userItem = MyApp.getApp().getUser(); //새로운 useritem을 가져온다.
 
 
         setGoogleLogin();
@@ -392,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void setGoogleLogin() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
@@ -489,6 +489,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (prefEmail != null && !prefEmail.equals("") ) {
             //User is signed in
             Log.d(TAG, "checkAutoLogin: Auto Login Started");
+
             String email = prefEmail;
             CollectionReference userCollection = db.collection("User");
             Query getUserQuery = userCollection.whereEqualTo("email", email);
@@ -503,6 +504,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (docs.size() == 1) {
                             DocumentSnapshot document = docs.get(0); //anyways there should be only one document snapshot.
                             userItem = document.toObject(UserItem.class);
+                            Toast.makeText(LoginActivity.this,"auto login check not working"+userItem.getUserId()+userItem.getEmail(),Toast.LENGTH_SHORT).show();
                             MyApp.getApp().setUser(userItem);
                             handler.sendEmptyMessage(0);
                             Log.d(TAG,"Auto Login Completed");
@@ -513,6 +515,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "Something went wrong" + e);
+                    Toast.makeText(LoginActivity.this,"point2 not working",Toast.LENGTH_SHORT).show();
                 }
             });
 
