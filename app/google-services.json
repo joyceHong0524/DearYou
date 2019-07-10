@@ -15,12 +15,32 @@
       },
       "oauth_client": [
         {
-          "client_id": "405726014562-nvi6908h9kfnhi48t5t39cqvk3v3tksn.apps.googleusercontent.com",
+          "client_id": "405726014562-dl2b4hnll8o16m3i4c8qcrtetnsj4c7q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.junga.dearyou",
+            "certificate_hash": "140d2024e123e8b6991fb54ff9d87197cd5359e4"
+          }
+        },
+        {
+          "client_id": "405726014562-ej7bqm5o64r9kpbo32mq7oub3hd3huon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.junga.dearyou",
+            "certificate_hash": "d5baae38a150c4c12a1ba300aedeb2eeb78c0a75"
+          }
+        },
+        {
+          "client_id": "405726014562-2572ue1jne6jree5jmi0gqpv4o6q8qk2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.junga.dearyou",
             "certificate_hash": "a47256501d35e38c3d2b6b44955fcbca0a2ab48d"
           }
+        },
+        {
+          "client_id": "405726014562-5koa3m4lcjs6p1kdaqomo7oklft3pvs7.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

@@ -279,7 +279,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         userItem = document.toObject(UserItem.class);
                         MyApp.getApp().setUser(userItem);
                         handler.sendEmptyMessage(0);
-                        finish();
                     } else if (docs.size() == 0) {
                         if (loginType == EMAIL_LOGIN) {
                             Log.d(TAG, "can't find user. docs size = " + docs.size());
