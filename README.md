@@ -1,4 +1,7 @@
+# Currently this application has been deleted from Google Play due to fundamental server change!
+
 # DearYou - Social diary app with extraordinary design
+
 <br>
 <br>
 <img src="./long.png" width="700" height="356" title="Long">
